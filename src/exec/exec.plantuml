@@ -1,0 +1,207 @@
+@startuml
+
+title __EXEC's Class Diagram__\n
+
+  namespace exec {
+    class exec.Runner {
+        ~ configFileName : String
+        {static} ~ dataset : String
+        ~ inputListDir : String
+        ~ method : IDiversify
+        ~ methodClassName : String
+        ~ outputFileName : String
+        ~ outputListSize : int
+        ~ runName : String
+        ~ topicMap : Properties
+        ~ topicSize : Properties
+        - RE_SORT_SELECTION_METHOD : int
+        - runBlurFilter : boolean
+        - runBordaFusionReRanker : boolean
+        - runCredRanker : boolean
+        - runFaceFilter : boolean
+        - runGTRelFilter : boolean
+        - runGeoFilter : boolean
+        - runListTrucating : boolean
+        - runTextRanker : boolean
+        - runViewRanker : boolean
+        - runWKConectRanker : boolean
+        - trucate_size : int
+        + Runner()
+        {static} + main()
+        {static} + readTopicsIds()
+        + run()
+        - initDivMethod()
+        {static} - printEffectiveness()
+        {static} - printEffectiveness2()
+        - reSortSelection()
+        - readConfiguration()
+        - readInputList()
+        - runBlurFilter()
+        - runGTRelFilter()
+        - writeOutputList()
+    }
+  }
+  
+
+  namespace exec {
+    class exec.RunnerCluster {
+        ~ configFileName : String
+        {static} ~ dataset : String
+        {static} ~ descritorName : String
+        ~ evaluationControl : EvaluationControl
+        ~ fm : FeatureManager
+        {static} ~ inputList : String
+        ~ inputListDir : String
+        ~ kMax : int
+        ~ kMin : int
+        ~ method : IDiversify
+        ~ methodClassName : String
+        ~ outputFileName : String
+        ~ outputListSize : int
+        ~ runName : String
+        ~ topicMap : Properties
+        ~ topicSize : Properties
+        - RE_SORT_SELECTION_METHOD : int
+        - methodName : String
+        - runBlurFilter : boolean
+        - runBordaFusionReRanker : boolean
+        - runCredRanker : boolean
+        - runFaceFilter : boolean
+        - runGTRelFilter : boolean
+        - runGeoFilter : boolean
+        - runListTrucating : boolean
+        - runTextRanker : boolean
+        - runViewRanker : boolean
+        - runWKConectRanker : boolean
+        - trucate_size : int
+        + RunnerCluster()
+        {static} + main()
+        {static} + mensurer()
+        {static} + readTopicsIds()
+        + run()
+        + separator()
+        - auxiliarError()
+        - initDivMethod()
+        - print()
+        {static} - printEffectiveness2()
+        - reSortSelection()
+        - readConfiguration()
+        - readInputList()
+        - runBlurFilter()
+        - writeOutputList()
+    }
+  }
+  
+
+  namespace exec {
+    class exec.RunnerClusterAgglomerative {
+        ~ configFileName : String
+        ~ curveAnaysisMethod : String
+        {static} ~ dataset : String
+        {static} ~ descritorName : String
+        ~ evaluationControl : EvaluationControl
+        ~ fm : FeatureManager
+        {static} ~ inputList : String
+        ~ inputListDir : String
+        ~ kMax : int
+        ~ kMin : int
+        ~ method : IDiversify
+        ~ methodClassName : String
+        ~ outputFileName : String
+        ~ outputListSize : int
+        ~ runName : String
+        ~ topicMap : Properties
+        ~ topicSize : Properties
+        - RE_SORT_SELECTION_METHOD : int
+        - methodName : String
+        - runBlurFilter : boolean
+        - runBordaFusionReRanker : boolean
+        - runCredRanker : boolean
+        - runFaceFilter : boolean
+        - runGTRelFilter : boolean
+        - runGeoFilter : boolean
+        - runListTrucating : boolean
+        - runTextRanker : boolean
+        - runViewRanker : boolean
+        - runWKConectRanker : boolean
+        {static} - totalTime : Map<String, Long>
+        - trucate_size : int
+        + RunnerClusterAgglomerative()
+        {static} + main()
+        {static} + mensurer()
+        {static} + readTopicsIds()
+        + run()
+        + separator()
+        - auxiliarError()
+        - initDivMethod()
+        - print()
+        {static} - printEffectiveness2()
+        - reSortSelection()
+        - readConfiguration()
+        - readInputList()
+        - runBlurFilter()
+        - writeOutputList()
+    }
+  }
+  
+
+  namespace exec {
+    class exec.RunnerClusterAgglomerativeDynamic1 {
+        ~ configFileName : String
+        {static} ~ dataset : String
+        {static} ~ descritorName : String
+        ~ evaluationControl : EvaluationControl
+        ~ fm : FeatureManager
+        {static} ~ inputList : String
+        ~ inputListDir : String
+        ~ kMax : int
+        ~ kMin : int
+        ~ method : IDiversify
+        ~ methodClassName : String
+        ~ outputFileName : String
+        ~ outputListSize : int
+        ~ runName : String
+        ~ topicMap : Properties
+        ~ topicSize : Properties
+        - RE_SORT_SELECTION_METHOD : int
+        - methodName : String
+        - runBlurFilter : boolean
+        - runBordaFusionReRanker : boolean
+        - runCredRanker : boolean
+        - runFaceFilter : boolean
+        - runGTRelFilter : boolean
+        - runGeoFilter : boolean
+        - runListTrucating : boolean
+        - runTextRanker : boolean
+        - runViewRanker : boolean
+        - runWKConectRanker : boolean
+        - trucate_size : int
+        + RunnerClusterAgglomerativeDynamic1()
+        {static} + main()
+        {static} + mensurer()
+        {static} + readTopicsIds()
+        + run()
+        + separator()
+        - auxiliarError()
+        - initDivMethod()
+        - print()
+        {static} - printEffectiveness2()
+        - reSortSelection()
+        - readConfiguration()
+        - readInputList()
+        - runBlurFilter()
+        - writeOutputList()
+    }
+  }
+  
+
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

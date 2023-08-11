@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Diversify2016:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/Diversify2016_jar</output-path>
+    <root id="archive" name="Diversify2016.jar">
+      <element id="module-output" name="PGCC003" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/weka.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/poi-3.13-20150929.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jgrapht-core-0.9.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jMetal.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
