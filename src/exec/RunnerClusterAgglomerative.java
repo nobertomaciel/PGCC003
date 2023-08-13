@@ -617,21 +617,11 @@ public class RunnerClusterAgglomerative {
         //System.out.println("measurer(String method):");
         try {
             ProcessBuilder pb = new ProcessBuilder("java", "-jar", "div_eval.jar", "-r", "one/results/output_run"+descritorName+method,  "-rgt", "one/resources/rGT", "-dgt", "one/resources/dGT", "-t", "one/resources/one_topics.xml",  "-o", "one/results", "-f", "run_eval"+descritorName+method);
-            // java -jar div_eval.jar -r one/results/descritorNameoutput_runmethod -rgt one/resources/rGT -dgt one/resources/dGT -t one/resources/one_topics.xml -o one/results -f descritorNamerun_evalmethod
-            //ProcessBuilder pb = new ProcessBuilder("java", "-jar", "div_eval.jar", "-r", "one/results/"+"output_run_"+descritorName+"_"+method, "-o", "one/results", "-f", "run_eval"+descritorName+"_"+method);
-
-            //System.out.println("one/results/output_run"+descritorName+method+" - run_eval"+descritorName+method);
-
-            //System.out.print("Running "+method+" effectiveness evaluation... ");
             Process p = pb.start();
             p.waitFor();
-            //System.out.println(" done:");
 
             // Printing effectiveness results
             printEffectiveness2(method);
-
-            //System.out.println();
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

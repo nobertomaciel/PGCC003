@@ -19,7 +19,7 @@ public class AgglomerativeClustering implements IDiversify {
 	private FeatureManager fm;
 	private ILinkage linkage;
 	private int kClusters;
-	private int timerDivisor;
+	private int timerDivisor = 1;
 	private long[] timeExecution = new long[151];
 	private int linkageCriterion;
 	private Properties configFile;
@@ -43,7 +43,7 @@ public class AgglomerativeClustering implements IDiversify {
 		
 		try {
 			configFile.load(new FileInputStream("resources/agglomerative.properties"));
-			this.kClusters = Integer.parseInt(configFile.getProperty("K_CLUSTERS"));
+			//this.kClusters = Integer.parseInt(configFile.getProperty("K_CLUSTERS")); // foi retirado, pois, estava causando repetição dos valores de performance
 			this.linkageCriterion = Integer.parseInt(configFile.getProperty("LINKAGE"));
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();

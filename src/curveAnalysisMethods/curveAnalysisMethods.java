@@ -54,8 +54,6 @@ public class curveAnalysisMethods {
         int ka = ki;
 
         double mediaMovel = 0.0;
-        //double[] mediaMovelArr = new double[mapAuxiliar.size()+kf];
-        //Map<Integer, Double> mediaMovelArr = new HashMap<Integer, Double>();
         NavigableMap<Integer,Double> mediaMovelArr = new TreeMap<>();
 
         if(!Double.isInfinite(mapAuxiliar.get(ki))) {yi = mapAuxiliar.get(ki);}
@@ -74,7 +72,6 @@ public class curveAnalysisMethods {
         interval =  this.movingAverageInterval;
 
         // calcula a média móvel de y para cada k em armazena em array
-        //for(int i = mediaMovelArr.length;i>=kf;i--){
         for(int i = ki;i>=kf;i--){
             yValue = (mapAuxiliar.get(i) == null || mapAuxiliar.get(i) == Double.NaN ? 0 : mapAuxiliar.get(i));
             mediaMovel += yValue;
@@ -90,14 +87,12 @@ public class curveAnalysisMethods {
                     c = 0;
                 }
             }
-            //mediaMovelArr[i-kf] = mediaMovel;
             mediaMovelArr.put(i, mediaMovel);
             c += 1;
         }
 
         // obtem o best k
         c = 0;
-        //for(int i = mapAuxiliar.size();i>=kf;i--){
         for(int i = ki;i>=kf;i--){
             ka = i;
             if(mapAuxiliar.get(i) == null || Double.isInfinite(mapAuxiliar.get(i))) {
@@ -142,11 +137,7 @@ public class curveAnalysisMethods {
             // ----------------------------------------------------------------------------------
             // Monotonicity analysis with moving average
             else if (this.curveAnaysisMethod == 3 || this.curveAnaysisMethod == 5 || this.curveAnaysisMethod == 7) {
-                //yi = mediaMovelArr[ki-1];
-                //mi = mediaMovelArr[mediaMovelArr.length-kf];
-                mi = mediaMovelArr.lastKey();
-                //ma = mediaMovelArr[i-kf];
-                //ma = mediaMovelArr[i];
+                mi = mediaMovelArr.get(ki);
                 ma = mediaMovelArr.get(i);
                 if(this.curveAnaysisMethod == 3) { // moving average only
                     // o limiar produz uma distorção quando aplicado e testado diretamente
@@ -194,13 +185,15 @@ public class curveAnalysisMethods {
                     //DB=0, DTRS=1, Dunn=2, Silhouette=3, SSE=4, XB=5
                     boolean test = false;
                     double caTest = ca[1]*limiar;
-                    if(iMethod==0 || iMethod == 1 || iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
-                        if(ca[0] > ca[1] && ca[1] < ca[2]){
+                    if(iMethod==0 || iMethod==1 || iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
+                        //DB=0, DTRS=1, Silhouette=3, SSE=4
+                        if(ca[0] > ca[1] && ca[1] < ca[2]){ // quando o ponto de inflexão é negativo (para baixo)
                             test = (ca[0] > caTest && caTest < ca[2] ? true : false);
                         }
                     }
                     else{
-                        if(ca[0] < ca[1] && ca[1] > ca[2]) {
+                        //Dunn=2, XB=5
+                        if(ca[0] < ca[1] && ca[1] > ca[2]) { // quando o ponto de inflexão é positivo (para cima)
                             test = (ca[0] < caTest && caTest > ca[2] ? true : false);
                         }
                     }
