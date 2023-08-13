@@ -43,9 +43,6 @@ public class curveAnalysisMethods {
         int c = 0;
         int interval;
 
-        double mediaMovel = 0.0;
-        double[] mediaMovelArr = new double[mapAuxiliar.size()];
-
         double ya,yi,yf,yValue,ma,mi,mf,vFunc;
         double[] v = new double[2];
         double[] ca = new double[3];
@@ -54,7 +51,12 @@ public class curveAnalysisMethods {
 
         int ki = mapAuxiliar.lastKey(); // é o k inicial que, no hierárquico, é o maior k
         int kf = mapAuxiliar.firstKey(); // é o k final que, no hierárquico, é o menor k
-        int ka = mapAuxiliar.lastKey();
+        int ka = ki;
+
+        double mediaMovel = 0.0;
+        //double[] mediaMovelArr = new double[mapAuxiliar.size()+kf];
+        //Map<Integer, Double> mediaMovelArr = new HashMap<Integer, Double>();
+        NavigableMap<Integer,Double> mediaMovelArr = new TreeMap<>();
 
         if(!Double.isInfinite(mapAuxiliar.get(ki))) {yi = mapAuxiliar.get(ki);}
         else {yi = Double.MAX_VALUE;}
@@ -72,7 +74,8 @@ public class curveAnalysisMethods {
         interval =  this.movingAverageInterval;
 
         // calcula a média móvel de y para cada k em armazena em array
-        for(int i = mediaMovelArr.length;i>=kf;i--){
+        //for(int i = mediaMovelArr.length;i>=kf;i--){
+        for(int i = ki;i>=kf;i--){
             yValue = (mapAuxiliar.get(i) == null || mapAuxiliar.get(i) == Double.NaN ? 0 : mapAuxiliar.get(i));
             mediaMovel += yValue;
             if(c == 0){
@@ -87,13 +90,15 @@ public class curveAnalysisMethods {
                     c = 0;
                 }
             }
-            mediaMovelArr[i-1] = mediaMovel;
+            //mediaMovelArr[i-kf] = mediaMovel;
+            mediaMovelArr.put(i, mediaMovel);
             c += 1;
         }
 
         // obtem o best k
         c = 0;
-        for(int i = mapAuxiliar.size();i>=kf;i--){
+        //for(int i = mapAuxiliar.size();i>=kf;i--){
+        for(int i = ki;i>=kf;i--){
             ka = i;
             if(mapAuxiliar.get(i) == null || Double.isInfinite(mapAuxiliar.get(i))) {
                 ya = Double.MAX_VALUE;
@@ -138,9 +143,16 @@ public class curveAnalysisMethods {
             // Monotonicity analysis with moving average
             else if (this.curveAnaysisMethod == 3 || this.curveAnaysisMethod == 5 || this.curveAnaysisMethod == 7) {
                 //yi = mediaMovelArr[ki-1];
-                mi = mediaMovelArr[mediaMovelArr.length-1];
-                ma = mediaMovelArr[i-1];
+                //mi = mediaMovelArr[mediaMovelArr.length-kf];
+                mi = mediaMovelArr.lastKey();
+                //ma = mediaMovelArr[i-kf];
+                //ma = mediaMovelArr[i];
+                ma = mediaMovelArr.get(i);
                 if(this.curveAnaysisMethod == 3) { // moving average only
+                    // o limiar produz uma distorção quando aplicado e testado diretamente
+                    // deve-se testar, inicialmente, a variação da curva de forma natural
+                    // em seguida, se passou no teste de variação, testar se essa variação é suficientemente grande
+
                     boolean test = (yf < ((yi) * (1 + limiar)) ? true : false);
                     if (test) {
                         break;
@@ -171,34 +183,26 @@ public class curveAnalysisMethods {
                     if(ka-ki == 0){
                         continue;
                     }
-                    boolean test;
+
                     double  coef = (ma-mi)/(ka-ki); // coeficiente do elemento atual, onde: yf = y atual
                     ca[c] = coef;
+
                     if(c >= 2){
                         c = -1;
                     }
-                    /*
-                    if(i == ki){cb = coef;}
-                    if(iMethod == 0 || iMethod == 1 || iMethod == 4 || iMethod == 5){
-                        // minimun value: Davies Bouldin, Xie Beni, DTRS, SSE
-                        // test = (cb >= coef*limiar ? true : false); // using threshold
-                        test = ((coef-cb) > 0 ? true : false); // using signal
-                    }
-                    else{
-                        //maximum value: Dunn Index. Silhouette
-                        //test = (cb <= coef*limiar ? true : false); // using threshold
-                        test = ((coef-cb) < 0 ? true : false); // using signal
-                    }
-                    */
 
                     //DB=0, DTRS=1, Dunn=2, Silhouette=3, SSE=4, XB=5
+                    boolean test = false;
                     double caTest = ca[1]*limiar;
-                    ca[1] = caTest;
                     if(iMethod==0 || iMethod == 1 || iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
-                        test = (ca[0] > caTest && caTest < ca[2] ? true : false);
+                        if(ca[0] > ca[1] && ca[1] < ca[2]){
+                            test = (ca[0] > caTest && caTest < ca[2] ? true : false);
+                        }
                     }
                     else{
-                        test = (ca[0] < caTest && caTest > ca[2] ? true : false);
+                        if(ca[0] < ca[1] && ca[1] > ca[2]) {
+                            test = (ca[0] < caTest && caTest > ca[2] ? true : false);
+                        }
                     }
 
                     k = ka + 1;

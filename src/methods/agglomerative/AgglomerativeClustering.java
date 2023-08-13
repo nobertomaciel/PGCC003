@@ -19,7 +19,7 @@ public class AgglomerativeClustering implements IDiversify {
 	private FeatureManager fm;
 	private ILinkage linkage;
 	private int kClusters;
-
+	private int timerDivisor;
 	private long[] timeExecution = new long[151];
 	private int linkageCriterion;
 	private Properties configFile;
@@ -43,7 +43,7 @@ public class AgglomerativeClustering implements IDiversify {
 		
 		try {
 			configFile.load(new FileInputStream("resources/agglomerative.properties"));
-			//this.kClusters = Integer.parseInt(configFile.getProperty("K_CLUSTERS"));
+			this.kClusters = Integer.parseInt(configFile.getProperty("K_CLUSTERS"));
 			this.linkageCriterion = Integer.parseInt(configFile.getProperty("LINKAGE"));
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();
@@ -101,6 +101,8 @@ public class AgglomerativeClustering implements IDiversify {
 		try {
 			configFile.load(new FileInputStream("resources/agglomerative.properties"));
 			this.linkageCriterion = Integer.parseInt(configFile.getProperty("LINKAGE"));
+			configFile.load(new FileInputStream("resources/runnerConfigFile.properties"));
+			this.timerDivisor = Integer.parseInt(configFile.getProperty("TIMER_DIVISOR"));
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();
 		} catch(IOException e) {
@@ -164,7 +166,7 @@ public class AgglomerativeClustering implements IDiversify {
 			int[] indexes = linkage.findClosestPair(clustering, this.fm);
 			try {
 				mergeClusters(clustering, indexes);
-				this.timeExecution[clustering.size()] = (System.nanoTime() - startTime)/1000000;// pega o tempo para a execução de kMin a kMax para cada um dos tópicos individualmente (um tópico por vez)
+				this.timeExecution[clustering.size()] = (System.nanoTime() - startTime)/timerDivisor;// pega o tempo para a execução de kMin a kMax para cada um dos tópicos individualmente (um tópico por vez)
 				// o best K deve ser utilizado aqui para interromper o algoritmo
 				//System.out.println("clustering.size(): "+clustering.size());
 			}

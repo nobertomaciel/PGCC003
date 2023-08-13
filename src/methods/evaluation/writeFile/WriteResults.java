@@ -35,7 +35,7 @@ public enum WriteResults {
             }
 
             bw.write("bestK,");
-            bw.write("time(ms)");
+            bw.write("time(nanoTime/TIMER_DIVISOR)");
 
             bw.newLine();
 

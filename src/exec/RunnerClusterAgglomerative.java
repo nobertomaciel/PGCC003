@@ -47,6 +47,7 @@ public class RunnerClusterAgglomerative {
     static int totalDescriptors;
     int kMax;
     int kMin;
+    int timerDivisor;
     int firstMethodEvaluation;
     int lastMethodEvaluation;
     int atualMethodEvaluation;
@@ -167,6 +168,7 @@ public class RunnerClusterAgglomerative {
             Properties configFile = new Properties();
             configFile.load(new FileInputStream(configFileName));
             this.inputListDir = configFile.getProperty("INPUT_LIST_DIR");
+            this.timerDivisor = Integer.parseInt(configFile.getProperty("TIMER_DIVISOR"));
             methodClassName = configFile.getProperty("DIVERSIFICATION_METHOD");
 
             this.runBlurFilter = Boolean.parseBoolean(configFile.getProperty("RUN_BLUR_FILTER"));
@@ -182,9 +184,7 @@ public class RunnerClusterAgglomerative {
             this.kMin = Integer.parseInt((configFile.getProperty("NUM_MIN_CLUSTERS") == null ? Integer.toString(this.kMax) : configFile.getProperty("NUM_MIN_CLUSTERS")));
             this.firstMethodEvaluation = Integer.parseInt(configFile.getProperty("FIRST_METHOD_EVALUATION"));
             this.lastMethodEvaluation = Integer.parseInt(configFile.getProperty("LAST_METHOD_EVALUATION"));
-
             this.runName = configFile.getProperty("RUN_NAME");
-
             this.curveAnaysisMethod = configFile.getProperty("CURVE_ANALYSIS_METHOD");
             this.runGeoFilter = Boolean.parseBoolean(configFile.getProperty("RUN_GEO_FILTER"));
             this.runFaceFilter = Boolean.parseBoolean(configFile.getProperty("RUN_FACE_FILTER"));
@@ -346,7 +346,7 @@ public class RunnerClusterAgglomerative {
             bestk[i] = methodEvaluation.get(i).bestK(i);
             String methodName = methodEvaluation.get(i).getClass().getSimpleName().toUpperCase();
             String sep = separator("........................................",(methodName.length() + String.valueOf(bestk[i]).length()));
-            System.out.format("....%s %s: %d (Time ms: %d)%n", methodName, sep, bestk[i],executionTime[bestk[i]]);
+            System.out.format("....%s %s: %d (Time nanoTime/TIMER_DIVISOR: %d)%n", methodName, sep, bestk[i],executionTime[bestk[i]]);
             methodEvaluation.get(i).reset();
             long t = executionTime[bestk[i]];
             totalTime.computeIfPresent(methodName, (k, v) -> v + t);
