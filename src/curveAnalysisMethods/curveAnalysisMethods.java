@@ -56,6 +56,8 @@ public class curveAnalysisMethods {
         double mediaMovel = 0.0;
         NavigableMap<Integer,Double> mediaMovelArr = new TreeMap<>();
 
+        NavigableMap<Integer,Double> angularCoefficientArr = new TreeMap<>();
+
         if(!Double.isInfinite(mapAuxiliar.get(ki))) {yi = mapAuxiliar.get(ki);}
         else {yi = Double.MAX_VALUE;}
 
@@ -151,26 +153,10 @@ public class curveAnalysisMethods {
                         k = ka + 1;
                     }
                 }
-                else if(this.curveAnaysisMethod == 5){ // using Euclidian distance INCOMPLETO
-                    //double  h = Math.sqrt(Math.pow((yf - yi), 2) + Math.pow((interval), 2));
-                    // o teste abaixo deve ser realizado de acordo com o tipo de evaluation (minimum or maximum)
-                    // o que pode ser o limiar?
-                    // o limiar deve ser calculado de acordo com o método, o tópico e o descritor (baseado na função)
-                    // vFunc é o valor da função em análise
-
-                    // falta fazer a vFunc
-                    //vFunc = 0; // definir como vFunc deve ser calculada
-
-                    //boolean test = (h >= vFunc*limiar ? true : false);
-                    //if(test){
-                    //    break;
-                    //}else{
-                    //    k = ka-1;
-                    //}
+                else if(this.curveAnaysisMethod == 5){
+                    // using Euclidian distance INCOMPLETO
                 }
                 else{ // using angular coefficient of the tangent line
-                    // a interrupção ocorre quando o coeficiente angular da reta tangente ao ângulo inverte a tendência
-                    // o ponto de corte é definido pela diferença entre o coeficiente final do coeficiente inicial aplicados a um limiar em percentual
                     if(ka-ki == 0){
                         continue;
                     }
@@ -178,21 +164,23 @@ public class curveAnalysisMethods {
                     double  coef = (ma-mi)/(ka-ki); // coeficiente do elemento atual, onde: yf = y atual
                     ca[c] = coef;
 
-                    if(c >= 2){
+                    angularCoefficientArr.put(i, coef);
+
+                    if(c == 2){
                         c = -1;
                     }
 
                     //DB=0, DTRS=1, Dunn=2, Silhouette=3, SSE=4, XB=5
                     boolean test = false;
                     double caTest = ca[1]*limiar;
-                    if(iMethod==0 || iMethod==1 || iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
-                        //DB=0, DTRS=1, Silhouette=3, SSE=4
+                    if(iMethod==0 || iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
+                        //DB=0, Silhouette=3, SSE=4
                         if(ca[0] > ca[1] && ca[1] < ca[2]){ // quando o ponto de inflexão é negativo (para baixo)
                             test = (ca[0] > caTest && caTest < ca[2] ? true : false);
                         }
                     }
                     else{
-                        //Dunn=2, XB=5
+                        //DTRS=1, Dunn=2, XB=5
                         if(ca[0] < ca[1] && ca[1] > ca[2]) { // quando o ponto de inflexão é positivo (para cima)
                             test = (ca[0] < caTest && caTest > ca[2] ? true : false);
                         }
@@ -203,7 +191,6 @@ public class curveAnalysisMethods {
                     if(test){
                         break;
                     }
-
                 }
             }
             // ----------------------------------------------------------------------------------
