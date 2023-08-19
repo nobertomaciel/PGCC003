@@ -37,7 +37,8 @@ public enum Dtrs implements IEvaluator {
         return valuesIndex.firstKey();
     }
     @Override
-    public int bestK(int iMethod) {
+    //public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
+    public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
 
         NavigableMap<Integer,Double> mapAuxiliar = new TreeMap<>();
 
@@ -59,10 +60,14 @@ public enum Dtrs implements IEvaluator {
         //System.out.println(mapAuxiliar.get(2));
         //System.out.println(mapAuxiliar.keySet());
         //System.out.println(valuesIndex.keySet());
-
-        int k = curveAnalysis.run(mapAuxiliar,iMethod);
-
-        return k;
+        //NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+        //NavigableMap<String,ArrayList<Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+        //double kd = returnArr.get("k").get(1);
+        //int k = (int)kd;
+        ////int k = curveAnalysis.run(mapAuxiliar, iMethod);
+        //return k;
+        return returnArr;
     }
 
     private double val(ArrayList<ArrayList<DigitalObject>> clusters, FeatureManager fm, int descriptor){

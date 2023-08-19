@@ -15,15 +15,19 @@ public enum WriteResults {
         return INSTANCE;
     }
 
-    public void writeFile(NavigableMap<Integer, ArrayList<EvaluationResult>> valueMetrics, int methodEvaluationCurrent, String descritorName, int[] clustersNum, ArrayList<Map<Integer,Long>> topicExecutionTime, ArrayList<int[]> topicBestK){
+    public void writeFile(NavigableMap<Integer, ArrayList<EvaluationResult>> valueMetrics, int methodEvaluationCurrent, String descritorName, int[] clustersNum, ArrayList<Map<Integer,Long>> topicExecutionTime, ArrayList<int[]> topicBestK, NavigableMap<Integer,TreeMap<Integer,TreeMap<String,TreeMap<Integer,Double>>>> allData){
         String dir = System.getProperty("user.dir");
-        File file = new File(dir+"/src/methods/evaluation/writeFile/results/"+valueMetrics.get(valueMetrics.firstKey()).get(methodEvaluationCurrent).getMethod().getClass().getSimpleName()+descritorName+".txt");
-        File fileMovieAvgCoefficient = new File(dir+"/src/methods/evaluation/writeFile/results/movieAvgCoefficient_"+valueMetrics.get(valueMetrics.firstKey()).get(methodEvaluationCurrent).getMethod().getClass().getSimpleName()+descritorName+".txt");
+        File file = new File(dir+"/src/methods/evaluation/writeFile/results/evaluation_"+valueMetrics.get(valueMetrics.firstKey()).get(methodEvaluationCurrent).getMethod().getClass().getSimpleName()+descritorName+".txt");
+        File fileMovieAvg = new File(dir+"/src/methods/evaluation/writeFile/results/movingAvg_"+valueMetrics.get(valueMetrics.firstKey()).get(methodEvaluationCurrent).getMethod().getClass().getSimpleName()+descritorName+".txt");
+        File fileCoefficient = new File(dir+"/src/methods/evaluation/writeFile/results/coefficient_"+valueMetrics.get(valueMetrics.firstKey()).get(methodEvaluationCurrent).getMethod().getClass().getSimpleName()+descritorName+".txt");
         try{
 
             BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
-            BufferedWriter bw2 = new BufferedWriter(new FileWriter(fileMovieAvgCoefficient, false));
-            ArrayList<Double> values;
+            BufferedWriter bw2 = new BufferedWriter(new FileWriter(fileMovieAvg, false));
+            BufferedWriter bw3 = new BufferedWriter(new FileWriter(fileCoefficient, false));
+
+            ArrayList<Double> values,mediaMovelArr,angularCoefficientArr;
+            double mediaMovelValues,angularCoefficientValues;
 
             this.kMin = clustersNum[0];
             this.kMax = clustersNum[1];
@@ -31,40 +35,64 @@ public enum WriteResults {
             for(int j = this.kMin; j <= this.kMax; j++){
                bw.write(j+",");
                bw2.write(j+",");
+               bw3.write(j+",");
             }
 
             bw.write("bestK,");
             bw2.write("bestK,");
+            bw3.write("bestK,");
 
             bw.write("time(nanoTime/TIMER_DIVISOR)");
             bw2.write("time(nanoTime/TIMER_DIVISOR)");
+            bw3.write("time(nanoTime/TIMER_DIVISOR)");
 
             bw.newLine();
             bw2.newLine();
+            bw3.newLine();
 
             for(Integer key: valueMetrics.keySet()){
                 Map<Integer,Long> time = new HashMap<Integer,Long>();
                 int[] bestK = topicBestK.get(key-1);
+
                 values = valueMetrics.get(key).get(methodEvaluationCurrent).getValues();
+                mediaMovelArr = new ArrayList<>(allData.get(key).get(methodEvaluationCurrent).get("mediaMovelArr").values());
+                angularCoefficientArr = new ArrayList<>(allData.get(key).get(methodEvaluationCurrent).get("angularCoefficientArr").values());
+
+
                 time = topicExecutionTime.get(key-1);
+                int jFinal = 0;
                 for(int j = 0; j < values.size(); j++){
-                    // puxar os dados da média movel e coeficiente angular (criar array em curveAnalysisMethods.java)
                     bw.write(values.get(j)+",");
-                    bw2.write(values.get(j)+",");
+                    int arrListSize = mediaMovelArr.size();
+                    if(j < arrListSize){
+                        mediaMovelValues = mediaMovelArr.get(j);
+                        angularCoefficientValues = angularCoefficientArr.get(j);
+                        jFinal = j;
+                    }
+                    else{
+                        mediaMovelValues = mediaMovelArr.get(jFinal);
+                        angularCoefficientValues = angularCoefficientArr.get(jFinal);
+                    }
+                    bw2.write(mediaMovelValues+",");
+                    bw3.write(angularCoefficientValues+",");
                 }
 
                 bw.write(bestK[methodEvaluationCurrent]+",");
                 bw2.write(bestK[methodEvaluationCurrent]+",");
+                bw3.write(bestK[methodEvaluationCurrent]+",");
 
                 bw.write(time.get(methodEvaluationCurrent).toString());
                 bw2.write(time.get(methodEvaluationCurrent).toString());
+                bw3.write(time.get(methodEvaluationCurrent).toString());
 
                 bw.newLine();
                 bw2.newLine();
+                bw3.newLine();
             }
 
             bw.close();
             bw2.close();
+            bw3.close();
 
         } catch (IOException ex) {
             ex.printStackTrace();

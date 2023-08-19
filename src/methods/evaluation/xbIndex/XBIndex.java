@@ -99,16 +99,21 @@ public enum XBIndex implements IEvaluator {
      * @return the best k associated
      */
     @Override
-    public int bestK(int i) {
+    public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
+    //public NavigableMap<String, ArrayList<Double>> bestK(int iMethod) {
+    //public int bestK(int iMethod) {
+
         NavigableMap<Integer,Double> mapAuxiliar = new TreeMap<>();
 
         for(Double key: valuesIndex.keySet()){
             mapAuxiliar.put(valuesIndex.get(key), key);
         }
-        int k = curveAnalysis.run(mapAuxiliar, i);
-        //int k = curveAnalysis.run(mapAuxiliar);
-        return k;
-        //return valuesIndex.get(valuesIndex.firstKey());
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+        //double kd = returnArr.get("k").get(1);
+        //int k = (int)kd;
+        ////int k = curveAnalysis.run(mapAuxiliar, iMethod);
+        //return k;
+        return returnArr;
     }
 
     @Override
@@ -117,7 +122,6 @@ public enum XBIndex implements IEvaluator {
     }
     @Override
     public double value() {
-        //return valuesIndex.get(valuesIndex.firstKey());
         return valuesIndex.firstKey();
     }
 

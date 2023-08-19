@@ -38,9 +38,12 @@ public class curveAnalysisMethods {
         }
     }
 
-    public int run(NavigableMap<Integer,Double> mapAuxiliar, int iMethod){
+    //public int run(NavigableMap<Integer,Double> mapAuxiliar, int iMethod){
+    //public NavigableMap<String,TreeMap<Integer,Double>> run(NavigableMap<Integer,Double> mapAuxiliar, int iMethod){
+    public NavigableMap<String,TreeMap<Integer,Double>> run(NavigableMap<Integer,Double> mapAuxiliar, int iMethod){
         int k = 0;
         int c = 0;
+        boolean pass = false;
         int interval;
 
         double ya,yi,yf,yValue,ma,mi,mf,vFunc;
@@ -54,9 +57,11 @@ public class curveAnalysisMethods {
         int ka = ki;
 
         double mediaMovel = 0.0;
-        NavigableMap<Integer,Double> mediaMovelArr = new TreeMap<>();
+        TreeMap<Integer,Double> mediaMovelArr = new TreeMap<>();
 
-        NavigableMap<Integer,Double> angularCoefficientArr = new TreeMap<>();
+        TreeMap<Integer,Double> angularCoefficientArr = new TreeMap<>();
+
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr = new TreeMap<>();
 
         if(!Double.isInfinite(mapAuxiliar.get(ki))) {yi = mapAuxiliar.get(ki);}
         else {yi = Double.MAX_VALUE;}
@@ -86,7 +91,7 @@ public class curveAnalysisMethods {
                 }
                 else{
                     mediaMovel /=interval;
-                    c = 0;
+                    //c = 0;  // ERRO AQUI, NÃO DEVE ZERAR c O TEMPO TODO
                 }
             }
             mediaMovelArr.put(i, mediaMovel);
@@ -108,7 +113,7 @@ public class curveAnalysisMethods {
             }
 
             // ----------------------------------------------------------------------------------
-            // Elbow analysis
+            // Elbow analysisyi
             if(this.curveAnaysisMethod == 1) {
                 double  h = Math.sqrt(Math.pow((ya - yi), 2) + Math.pow((ka - ki), 2));
                 double  H = Math.sqrt(Math.pow((kf - ki), 2) + Math.pow((yf - yi), 2));
@@ -158,6 +163,7 @@ public class curveAnalysisMethods {
                 }
                 else{ // using angular coefficient of the tangent line
                     if(ka-ki == 0){
+                        angularCoefficientArr.put(i, 0.0);
                         continue;
                     }
 
@@ -174,22 +180,24 @@ public class curveAnalysisMethods {
                     boolean test = false;
                     double caTest = ca[1]*limiar;
                     if(iMethod==0 || iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
-                        //DB=0, Silhouette=3, SSE=4
+                        //DB=0, DTRS=1, Silhouette=3, SSE=4
                         if(ca[0] > ca[1] && ca[1] < ca[2]){ // quando o ponto de inflexão é negativo (para baixo)
                             test = (ca[0] > caTest && caTest < ca[2] ? true : false);
                         }
                     }
                     else{
-                        //DTRS=1, Dunn=2, XB=5
+                        //Dunn=2, XB=5
                         if(ca[0] < ca[1] && ca[1] > ca[2]) { // quando o ponto de inflexão é positivo (para cima)
                             test = (ca[0] < caTest && caTest > ca[2] ? true : false);
                         }
                     }
 
-                    k = ka + 1;
+                    //k = ka + 1;
 
-                    if(test){
-                        break;
+                    if(test && pass == false){
+                        k = ka + 1;
+                        pass = true;
+                        //break;
                     }
                 }
             }
@@ -204,7 +212,8 @@ public class curveAnalysisMethods {
                 for(Double key: valuesIndex.keySet()){
                     mapAuxiliar.put(valuesIndex.get(key), key);
                 }
-                return valuesIndex.get(valuesIndex.lastKey());
+                // implementar aqui o returnArr no lugar de return valuesIndex.get(valuesIndex.lastKey());
+                //return valuesIndex.get(valuesIndex.lastKey());
             }
             c += 1;
         }
@@ -213,6 +222,15 @@ public class curveAnalysisMethods {
             k = ka;
         }
 
-        return k;
+        returnArr.put("k", new TreeMap<Integer,Double>());
+        returnArr.put("mediaMovelArr", new TreeMap<Integer,Double>());
+        returnArr.put("angularCoefficientArr", new TreeMap<Integer,Double>());
+
+        double kDouble = k;
+        returnArr.get("k").put(1, kDouble);
+        returnArr.put("mediaMovelArr", mediaMovelArr);
+        returnArr.put("angularCoefficientArr", angularCoefficientArr);
+
+        return returnArr;
     }
 }

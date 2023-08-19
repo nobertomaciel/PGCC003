@@ -37,6 +37,7 @@ import rerank.views.ViewRanker;
 import java.io.*;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.Map.Entry;
 
 public class RunnerClusterAgglomerative {
     private static Map<String, Long> totalTime = new HashMap<String, Long>();
@@ -70,12 +71,6 @@ public class RunnerClusterAgglomerative {
     static String descritorName;
 
     private static ArrayList<Map<Integer,Long>> topicExecutionTime = new ArrayList<Map<Integer,Long>>();
-    //private static Map<String, long[]> topicExecutionTime = new HashMap<String, long[]>();
-    //static long[] topicExecutionTime = new long[222];
-    //private static ArrayList<Map<String,Long>> topicExecutionTime = new ArrayList<Map<String,Long>>();
-    //private static Map<String,Long> topicExecutionTime = new  HashMap<String,Long>();
-
-
 
     private int RE_SORT_SELECTION_METHOD;
 
@@ -95,6 +90,10 @@ public class RunnerClusterAgglomerative {
     private boolean runBordaFusionReRanker;
     private String methodName;
 
+    NavigableMap<Integer,TreeMap<Integer,TreeMap<String,TreeMap<Integer,Double>>>> allData = new TreeMap<>();
+    NavigableMap<String,TreeMap<Integer,Double>> returnBestKTree = new TreeMap<>();
+    //NavigableMap<String,ArrayList<Double>> returnBestKArr = new TreeMap<>();
+
     //Filters
 
 
@@ -110,7 +109,7 @@ public class RunnerClusterAgglomerative {
         String descriptor = "DESCRIPTOR["+descriptorNumber+"]";
         //String descriptor = "DESCRIPTOR[0]";
 
-        try {
+        try {            //executionTime[k] = (System.nanoTime() - startTime)/1000000;// pega o tempo para a execução de kMin a kMax para cada um dos tópicos individualmente (um tópico por vez)
             descriptorConfigFile.load(new FileInputStream("resources/descriptorConfigFile.properties"));
             num_descriptors = Integer.parseInt(descriptorConfigFile.getProperty("NUM_DESCRIPTORS"));
             this.descritorName = descriptorConfigFile.getProperty(descriptor).toUpperCase();
@@ -262,6 +261,7 @@ public class RunnerClusterAgglomerative {
     }
 
     public void run(int topicId, ArrayList<IEvaluator> methodEvaluation, int descriptorNumber) {
+
         System.out.println("run()-------------------------------------------------------------------------------------------");
         System.out.println("public void run(int topicId "+topicId+")");
         System.out.println("##############################################");
@@ -323,6 +323,7 @@ public class RunnerClusterAgglomerative {
         if(methodName == "AgglomerativeClustering") kMin=kMax;
         ArrayList<ArrayList<DigitalObject>> cluster;
         ArrayList<ArrayList<ArrayList<DigitalObject>>> clusterAuxiliar = new ArrayList<>();
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr = new TreeMap<>();
         long[] executionTime = new long[kMax+1];
         long startTime = System.nanoTime();
         for (int k = kMin; k <= kMax; k++) {
@@ -330,7 +331,6 @@ public class RunnerClusterAgglomerative {
             System.out.println("....k = "+k);
             ((AgglomerativeClustering) method).setNUM_CLUSTERS(k);
             cluster = ((AgglomerativeClustering) method).run2(this.dataset, fm, inputList, topicId, topicName);
-            //executionTime[k] = (System.nanoTime() - startTime)/1000000;// pega o tempo para a execução de kMin a kMax para cada um dos tópicos individualmente (um tópico por vez)
             executionTime[k] = ((AgglomerativeClustering) method).getTimeExecution(k);
             clusterAuxiliar.add(cluster);
             auxiliarError(cluster);
@@ -340,17 +340,30 @@ public class RunnerClusterAgglomerative {
         bestk = new int[methodEvaluation.size()];
         evaluationControl.setClustering(clusterAuxiliar);
         evaluationControl.runEvaluation(methodEvaluation, fm, topicId);
+        allData.put(topicId, new TreeMap<Integer,TreeMap<String,TreeMap<Integer,Double>>>());
         for (int i = firstMethodEvaluation; i <= lastMethodEvaluation; i++) {
-        //for (int i = 0; i < methodEvaluation.size(); i++) {
             this.atualMethodEvaluation = i;
-            bestk[i] = methodEvaluation.get(i).bestK(i);
+            returnBestKTree = methodEvaluation.get(i).bestK(i);
+            TreeMap<String, TreeMap<Integer, Double>> innerMap = new TreeMap<>();
+
+            innerMap.put("k", returnBestKTree.get("k"));
+            innerMap.put("mediaMovelArr", returnBestKTree.get("mediaMovelArr"));
+            innerMap.put("angularCoefficientArr", returnBestKTree.get("angularCoefficientArr"));
+
+            allData.get(topicId).put(i, innerMap);
+
+            //allData.get(topicId).put(i, new TreeMap<String,TreeMap<Integer,Double>>());
+            //allData.get(topicId).get(i).put("k", returnBestKTree.get("k"));
+            //allData.get(topicId).get(i).put("mediaMovelArr", returnBestKTree.get("mediaMovelArr"));
+            //allData.get(topicId).get(i).put("angularCoefficientArr", returnBestKTree.get("angularCoefficientArr"));
+            double kd = returnBestKTree.get("k").get(1);
+            bestk[i] = (int)kd;
             String methodName = methodEvaluation.get(i).getClass().getSimpleName().toUpperCase();
             String sep = separator("........................................",(methodName.length() + String.valueOf(bestk[i]).length()));
             System.out.format("....%s %s: %d (Time nanoTime/TIMER_DIVISOR: %d)%n", methodName, sep, bestk[i],executionTime[bestk[i]]);
             methodEvaluation.get(i).reset();
             long t = executionTime[bestk[i]];
             totalTime.computeIfPresent(methodName, (k, v) -> v + t);
-            // totaliza o tempo para todos os tópicos de cada methodName
         }
         System.out.println("\n>>> __________________________________________________________________");
 
@@ -542,7 +555,6 @@ public class RunnerClusterAgglomerative {
 
             // Initialize deleting output files and seting up localTime
             for (int i = runner.firstMethodEvaluation; i <= runner.lastMethodEvaluation; i++) {
-            //for (int i = 0; i < methodsEvaluation.size(); i++) {
                 String method = methodsEvaluation.get(i).getClass().getSimpleName();
                 totalTime.put(method.toUpperCase(), Long.valueOf(0));
                 String[] file = {"output_run", "run_eval"};
@@ -564,33 +576,15 @@ public class RunnerClusterAgglomerative {
 
             // aqui inicia a avaliacao
             for (int i = runner.firstMethodEvaluation; i <= runner.lastMethodEvaluation; i++) {
-            //for (int i = 0; i < methodsEvaluation.size(); i++) {
-                //System.out.println("Run mensurer: "+methodsEvaluation.get(i).getClass().getSimpleName());
                 System.out.println(methodsEvaluation.get(i).getClass().getSimpleName());
                 mensurer(methodsEvaluation.get(i).getClass().getSimpleName());
                 System.out.print((";" + totalTime.get(methodsEvaluation.get(i).getClass().getSimpleName().toUpperCase())) + ";" + (totalTime.get(methodsEvaluation.get(i).getClass().getSimpleName().toUpperCase()) / (topicsIDs.length)) + "\n");
-                //System.out.println("Average running time for "+topicsIDs.length+" topics in miliseconds: "+
-                //        (totalTime.get(methodsEvaluation.get(i).getClass().getSimpleName().toUpperCase())/(topicsIDs.length)));
-                //System.out.println("Total running time for "+topicsIDs.length+" topics in miliseconds: "+
-                //        (totalTime.get(methodsEvaluation.get(i).getClass().getSimpleName().toUpperCase())));
-                //(totalTime.get(methodsEvaluation.get(i).getClass().getSimpleName().toUpperCase())/(runner.kMax-runner.kMin)));
             }
 
             int[] clustersNum = {runner.kMin, runner.kMax};
-            //System.out.println("Top descriptorNames.size: "+runner.fm.descriptorNames.size());
             for (int i = runner.firstMethodEvaluation; i <= runner.lastMethodEvaluation; i++) {
-            //for (int i = 0; i < methodsEvaluation.size(); i++) {
-                int bestK = runner.getBestk(i);
-                //System.out.println("methodsEvaluation.size: " + methodsEvaluation.size());
                 for (int j = 0; j < runner.fm.descriptorNames.size(); j++) {
-                    //System.out.println("descriptorNames.size: " + runner.fm.descriptorNames.size());
-                    //System.out.print((";" + totalTime.get(methodsEvaluation.get(i).getClass().getSimpleName().toUpperCase())) + ";" + (totalTime.get(methodsEvaluation.get(i).getClass().getSimpleName().toUpperCase()) / (topicsIDs.length)) + "\n");
-                    //descritorName = runner.fm.descriptorNames.get(j).toUpperCase();
-                    //String methodName = methodsEvaluation.get(i).getClass().getSimpleName().toUpperCase();
-                    //String desc = descritorName +" "+ methodName;
-                    //String sep = runner.separator("........................................",desc.length());
-                    //System.out.println(ddescritorNameesc+sep+": "+runner.getBestk(i));
-                    runner.evaluationControl.writeFile(i, runner.fm.descriptorNames.get(j), clustersNum, topicExecutionTime,topicBestK);
+                    runner.evaluationControl.writeFile(i, runner.fm.descriptorNames.get(j), clustersNum, topicExecutionTime,topicBestK,runner.allData);
                 }
             }
         java.awt.Toolkit.getDefaultToolkit().beep();

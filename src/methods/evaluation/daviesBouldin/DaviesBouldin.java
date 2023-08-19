@@ -64,7 +64,9 @@ public enum DaviesBouldin implements IEvaluator {
     }
 
     @Override
-    public int bestK(int iMethod) {
+    //public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
+    public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
+    //public int bestK(int iMethod) {
         NavigableMap<Integer,Double> mapAuxiliar = new TreeMap<>();
 
         for(Double key: valuesIndex.keySet()){
@@ -72,8 +74,13 @@ public enum DaviesBouldin implements IEvaluator {
         }
         //return valuesIndex.get(valuesIndex.lastKey());
 
-        int k = curveAnalysis.run(mapAuxiliar, iMethod);
-        return k;
+        //NavigableMap<String,ArrayList<Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+        //double kd = returnArr.get("k").get(1);
+        //int k = (int)kd;
+        ////int k = curveAnalysis.run(mapAuxiliar, iMethod);
+        //return k;
+        return returnArr;
     }
     @Override
     public void reset() {

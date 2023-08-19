@@ -62,7 +62,9 @@ public enum SumSquaredError implements IEvaluator {
 //        int k = curveAnalysis.run(mapAuxiliar, iMethod);
 //        return k;
 //    }
-    public int bestK(int iMethod) {
+    public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
+    //public NavigableMap<String, ArrayList<Double>> bestK(int iMethod) {
+    //public int bestK(int iMethod) {
 
         NavigableMap<Integer,Double> mapAuxiliar = new TreeMap<>();
 
@@ -80,12 +82,19 @@ public enum SumSquaredError implements IEvaluator {
 
         for(int i = 0; i < index.size()-1; i++){
             if((Math.abs(index.get(i) - index.get(i+1))) < coefficient)
-                return valuesIndex.get(index.get(i));
+                // implementar returnArr aqui
+                // implementar returnArr aqui
+                // implementar returnArr aqui
+                valuesIndex.get(index.get(i)); // duplicado com a linha abaixo, retirar
+                //return valuesIndex.get(index.get(i));
         }
-
-        int k = curveAnalysis.run(mapAuxiliar,iMethod);
-
-        return k;
+        //NavigableMap<String,ArrayList<Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+        //double kd = returnArr.get("k").get(1);
+        //int k = (int)kd;
+        ////int k = curveAnalysis.run(mapAuxiliar, iMethod);
+        //return k;
+        return returnArr;
     }
 
 

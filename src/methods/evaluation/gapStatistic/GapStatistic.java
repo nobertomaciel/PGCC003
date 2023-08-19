@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NavigableMap;
 import java.util.TreeMap;
+import curveAnalysisMethods.curveAnalysisMethods;
 
 /**
  * This Enum is responsable to calculate the GapStatistic of the clustering
  */
 public enum GapStatistic implements IEvaluator {
     INSTANCE;
+    curveAnalysisMethods curveAnalysis = new curveAnalysisMethods();
     private ArrayList<Double> standardDeviation = new ArrayList<>();
     private int indexClusterB = 0;
     private NavigableMap<Double,Integer> valuesIndex = new TreeMap<>();
@@ -144,7 +146,10 @@ public enum GapStatistic implements IEvaluator {
      * @return The best value of the k
      */
     @Override
-    public int bestK(int iMethod) {
+    public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
+    //public NavigableMap<String, ArrayList<Double>> bestK(int iMethod) {
+        NavigableMap<Integer,Double> mapAuxiliar = new TreeMap<>();
+    //public int bestK(int iMethod) {
 //        double current;
 //        double previous = 0.0;
 //        int bestK = -1;
@@ -172,7 +177,13 @@ public enum GapStatistic implements IEvaluator {
 //
 //
 //        }
-        return valuesIndex.get(valuesIndex.lastKey()); //In this case, indicate some problem
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+        //double kd = returnArr.get("k").get(1);
+        //int k = (int)kd;
+        ////int k = curveAnalysis.run(mapAuxiliar, iMethod);
+        //return k;
+        return returnArr;
+        //return valuesIndex.get(valuesIndex.lastKey()); //In this case, indicate some problem
     }
 
     @Override

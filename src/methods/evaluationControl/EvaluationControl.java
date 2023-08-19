@@ -90,10 +90,10 @@ public class EvaluationControl {
 
     }
 
-    public void writeFile(int methodEvaluationCurrent, String descritorName, int[] clustersNum, ArrayList<Map<Integer,Long>> topicExecutionTime, ArrayList<int[]> topicBestK){
+    public void writeFile(int methodEvaluationCurrent, String descritorName, int[] clustersNum, ArrayList<Map<Integer,Long>> topicExecutionTime, ArrayList<int[]> topicBestK, NavigableMap<Integer,TreeMap<Integer,TreeMap<String,TreeMap<Integer,Double>>>> allData){
     //public void writeFile(int methodEvaluationCurrent, String descritorName, int[] clustersNum, Map<String,Long> topicExecutionTime){
        //System.out.println(descritorName);
-       WriteResults.getInstance().writeFile(resultEvaluation, methodEvaluationCurrent,descritorName,clustersNum,topicExecutionTime, topicBestK);
+       WriteResults.getInstance().writeFile(resultEvaluation, methodEvaluationCurrent,descritorName,clustersNum,topicExecutionTime, topicBestK, allData);
    }
 
 

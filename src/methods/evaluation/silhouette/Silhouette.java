@@ -5,6 +5,7 @@ import curveAnalysisMethods.curveAnalysisMethods;
 import interfaces.IEvaluator;
 import object.DigitalObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -118,14 +119,20 @@ public enum Silhouette implements IEvaluator {
     }
 
     @Override
-    public int bestK(int iMethod) {
+    public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
+    //public NavigableMap<String, ArrayList<Double>> bestK(int iMethod) {
+    //public int bestK(int iMethod) {
         NavigableMap<Integer,Double> mapAuxiliar = new TreeMap<>();
 
         for(Double key: valuesIndex.keySet()){
             mapAuxiliar.put(valuesIndex.get(key), key);
         }
-        int k = curveAnalysis.run(mapAuxiliar, iMethod);
-        return k;
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+        //double kd = returnArr.get("k").get(1);
+        //int k = (int)kd;
+        ////int k = curveAnalysis.run(mapAuxiliar, iMethod);
+        //return k;
+        return returnArr;
     }
     public void reset(){valuesIndex.clear();}
     @Override
