@@ -352,10 +352,6 @@ public class RunnerClusterAgglomerative {
 
             allData.get(topicId).put(i, innerMap);
 
-            //allData.get(topicId).put(i, new TreeMap<String,TreeMap<Integer,Double>>());
-            //allData.get(topicId).get(i).put("k", returnBestKTree.get("k"));
-            //allData.get(topicId).get(i).put("mediaMovelArr", returnBestKTree.get("mediaMovelArr"));
-            //allData.get(topicId).get(i).put("angularCoefficientArr", returnBestKTree.get("angularCoefficientArr"));
             double kd = returnBestKTree.get("k").get(1);
             bestk[i] = (int)kd;
             String methodName = methodEvaluation.get(i).getClass().getSimpleName().toUpperCase();
@@ -445,7 +441,6 @@ public class RunnerClusterAgglomerative {
             for (int i = 0; i < this.outputListSize && i < outputList.size(); i++) {
                 DigitalObject dObject = outputList.get(i);
                 bw.write(idTopic + " 0 " + dObject.getId() + " " + index + " " + (resultSize - index) + " " + this.runName + "\n");
-                //System.out.println(outputFileName + ".....:" + idTopic + " 0 " + dObject.getId() + " " + index + " " + (resultSize - index) + " " + this.runName);
                 index++;
             }
 

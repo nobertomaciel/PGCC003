@@ -32,6 +32,7 @@ public enum Silhouette implements IEvaluator {
         }
 
         Double indice = silhouette/overallImages;
+        indice = (indice.isNaN() ? 0.0 : indice);
         //System.out.format("Silhouette........................: %f%n",indice);
         if(!valuesIndex.containsKey(indice))
             valuesIndex.put(indice,clusters.size());
@@ -45,38 +46,27 @@ public enum Silhouette implements IEvaluator {
 
     private double silhouette(ArrayList<DigitalObject> cluster1,
                               ArrayList<ArrayList<DigitalObject>> clustering, FeatureManager fm, int currentCluster) {
-
         double maximumDissimilarityClusters = 0.0;
         double distanceInternal = 0.0;
         double silhouette = 0.0;
         for(int i = 0; i < cluster1.size(); i++) {
             if(cluster1.size() > 1){
                 for(int j = 0; j < cluster1.size(); j++) {
-                    //calcula a distância da imagem i para todas as outras do cluster
-                    distanceInternal += fm.getAvgDistance(cluster1.get(i), cluster1.get(j));
+                    distanceInternal += fm.getAvgDistance(cluster1.get(i), cluster1.get(j)); //calcula a distância da imagem i para todas as outras imagens j do cluster (a)
                 }
-                //calcula a dissimilaridade média da imagem i
-                distanceInternal /= cluster1.size();
-                //calcula o valor da dissimilaridade entre a imagem i para todos os outros clusters
-                maximumDissimilarityClusters = maximumDissimilarityClusterGA(i,clustering, currentCluster, fm);
+                distanceInternal /= cluster1.size(); //calcula a dissimilaridade média da imagem i
+                maximumDissimilarityClusters = maximumDissimilarityClusterGA(i,clustering, currentCluster, fm); //calcula o valor da dissimilaridade entre a imagem i para todos os outros clusters (a para b)
                 double value = 0;
                 if(distanceInternal < maximumDissimilarityClusters){
-                    //System.out.println("cluster: "+ currentCluster +" image: " + i + " melhor vizinho longe: cluster certo ");
                     value = 1 - (distanceInternal/maximumDissimilarityClusters);
                     silhouette += value;
-                    //silhouetteValueList.add(value);
                 }else if(distanceInternal == maximumDissimilarityClusters){
-                    //System.out.println("cluster: "+ currentCluster +" image: " + i + " indefinido");
                     silhouette += 0.0;
-                    //silhouetteValueList.add(value);
                 }else{
-                    //System.out.println("cluster: "+ currentCluster +" image: " + i + " melhor vizinho próximo: cluster errado ");
                     value = (maximumDissimilarityClusters/distanceInternal) - 1;
                     silhouette += value;
-                    //silhouetteValueList.add(value);
                 }
             }else{
-
                 silhouette += 0.0;
             }
         }
@@ -94,6 +84,7 @@ public enum Silhouette implements IEvaluator {
         for(int j = 0; j < clustering.size(); j++) {
             if(j == currentCluster){
                 //não deve ser calculado, já foi calculado na similaridade interna do cluster
+                continue; // inserido por noberto
             }else{
                 double distance = this.getDistance(clustering.get(currentCluster), imageI, clustering.get(j), fm);
                 if(distance > maximum){//maior distância da imagem i do cluster A para os demais clusters
@@ -120,24 +111,17 @@ public enum Silhouette implements IEvaluator {
 
     @Override
     public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
-    //public NavigableMap<String, ArrayList<Double>> bestK(int iMethod) {
-    //public int bestK(int iMethod) {
         NavigableMap<Integer,Double> mapAuxiliar = new TreeMap<>();
-
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr;
         for(Double key: valuesIndex.keySet()){
             mapAuxiliar.put(valuesIndex.get(key), key);
         }
-        NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
-        //double kd = returnArr.get("k").get(1);
-        //int k = (int)kd;
-        ////int k = curveAnalysis.run(mapAuxiliar, iMethod);
-        //return k;
+        returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
         return returnArr;
     }
     public void reset(){valuesIndex.clear();}
     @Override
     public double value() {
-        //return valuesIndex.get(valuesIndex.firstKey());
         return valuesIndex.firstKey();
     }
 

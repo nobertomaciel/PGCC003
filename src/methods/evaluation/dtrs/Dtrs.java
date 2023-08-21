@@ -41,7 +41,7 @@ public enum Dtrs implements IEvaluator {
     public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
 
         NavigableMap<Integer,Double> mapAuxiliar = new TreeMap<>();
-
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr;
         for(Double key: valuesIndex.keySet()){
             mapAuxiliar.put(valuesIndex.get(key), key);
         }
@@ -51,22 +51,8 @@ public enum Dtrs implements IEvaluator {
         for (Integer key: mapAuxiliar.keySet()){
              index.add(mapAuxiliar.get(key));
         }
-        //int k = valuesIndex.get(valuesIndex.firstKey());
-        //selecionar aqui o bestK, implementar o método e instanciar
-        // utilizar o mapAuxiliar.keySet() para calcular diretamente pelo método do cotovelo e pelo método usando derivadas
-        //for(Integer  key: mapAuxiliar.keySet()){
-            //mapAuxiliar.get(key);
-        //}
-        //System.out.println(mapAuxiliar.get(2));
-        //System.out.println(mapAuxiliar.keySet());
-        //System.out.println(valuesIndex.keySet());
-        //NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
-        //NavigableMap<String,ArrayList<Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
-        NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
-        //double kd = returnArr.get("k").get(1);
-        //int k = (int)kd;
-        ////int k = curveAnalysis.run(mapAuxiliar, iMethod);
-        //return k;
+        returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+
         return returnArr;
     }
 

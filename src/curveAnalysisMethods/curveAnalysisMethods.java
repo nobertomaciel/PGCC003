@@ -91,7 +91,6 @@ public class curveAnalysisMethods {
                 }
                 else{
                     mediaMovel /=interval;
-                    //c = 0;  // ERRO AQUI, NÃO DEVE ZERAR c O TEMPO TODO
                 }
             }
             mediaMovelArr.put(i, mediaMovel);
@@ -179,7 +178,7 @@ public class curveAnalysisMethods {
                     //DB=0, DTRS=1, Dunn=2, Silhouette=3, SSE=4, XB=5
                     boolean test = false;
                     double caTest = ca[1]*limiar;
-                    if(iMethod==0 || iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
+                    if(iMethod==0 ||iMethod==1 ||  iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
                         //DB=0, DTRS=1, Silhouette=3, SSE=4
                         if(ca[0] > ca[1] && ca[1] < ca[2]){ // quando o ponto de inflexão é negativo (para baixo)
                             test = (ca[0] > caTest && caTest < ca[2] ? true : false);

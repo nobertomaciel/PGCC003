@@ -100,19 +100,15 @@ public enum XBIndex implements IEvaluator {
      */
     @Override
     public NavigableMap<String, TreeMap<Integer,Double>> bestK(int iMethod) {
-    //public NavigableMap<String, ArrayList<Double>> bestK(int iMethod) {
-    //public int bestK(int iMethod) {
 
         NavigableMap<Integer,Double> mapAuxiliar = new TreeMap<>();
+        NavigableMap<String,TreeMap<Integer,Double>> returnArr;
 
         for(Double key: valuesIndex.keySet()){
             mapAuxiliar.put(valuesIndex.get(key), key);
         }
-        NavigableMap<String,TreeMap<Integer,Double>> returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
-        //double kd = returnArr.get("k").get(1);
-        //int k = (int)kd;
-        ////int k = curveAnalysis.run(mapAuxiliar, iMethod);
-        //return k;
+        returnArr = curveAnalysis.run(mapAuxiliar, iMethod);
+
         return returnArr;
     }
 
