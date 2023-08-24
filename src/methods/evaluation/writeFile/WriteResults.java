@@ -7,8 +7,6 @@ import java.util.*;
 
 public enum WriteResults {
     INSTANCE;
-    private int kMin = 0;
-    private int kMax = 0;
     WriteResults(){}
 
     public static WriteResults getInstance(){
@@ -29,13 +27,15 @@ public enum WriteResults {
             ArrayList<Double> values,mediaMovelArr,angularCoefficientArr;
             double mediaMovelValues,angularCoefficientValues;
 
-            this.kMin = clustersNum[0];
-            this.kMax = clustersNum[1];
+            int kMin = clustersNum[0];
+            int kMax = clustersNum[1];
+            int truncateSize = clustersNum[2];
 
-            for(int j = this.kMin; j <= this.kMax; j++){
-               bw.write(j+",");
-               bw2.write(j+",");
-               bw3.write(j+",");
+            //for(int j = this.kMin; j <= this.kMax; j++){
+            for(int j = truncateSize; j >= kMin; j--){
+                    bw.write(j+",");
+                    bw2.write(j+",");
+                    bw3.write(j+",");
             }
 
             bw.write("bestK,");
@@ -60,19 +60,20 @@ public enum WriteResults {
 
 
                 time = topicExecutionTime.get(key-1);
-                int jFinal = 0;
-                for(int j = 0; j < values.size(); j++){
+                //int jFinal = 0;
+                int arrListSize = mediaMovelArr.size();
+                //for(int j = 0; j < values.size(); j++){
+                for(int j = 0; j < arrListSize; j++){
                     bw.write(values.get(j)+",");
-                    int arrListSize = mediaMovelArr.size();
-                    if(j < arrListSize){
-                        mediaMovelValues = mediaMovelArr.get(j);
-                        angularCoefficientValues = angularCoefficientArr.get(j);
-                        jFinal = j;
-                    }
-                    else{
-                        mediaMovelValues = mediaMovelArr.get(jFinal);
-                        angularCoefficientValues = angularCoefficientArr.get(jFinal);
-                    }
+                    //if(j < arrListSize){
+                    mediaMovelValues = mediaMovelArr.get(j);
+                    angularCoefficientValues = angularCoefficientArr.get(j);
+                    //jFinal = j;
+                    //}
+                    //else{
+                    //    mediaMovelValues = mediaMovelArr.get(jFinal);
+                    //    angularCoefficientValues = angularCoefficientArr.get(jFinal);
+                    //}
                     bw2.write(mediaMovelValues+",");
                     bw3.write(angularCoefficientValues+",");
                 }

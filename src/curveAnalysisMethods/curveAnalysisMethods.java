@@ -150,7 +150,7 @@ public class curveAnalysisMethods {
                     // deve-se testar, inicialmente, a variação da curva de forma natural
                     // em seguida, se passou no teste de variação, testar se essa variação é suficientemente grande
 
-                    boolean test = (yf < ((yi) * (1 + limiar)) ? true : false);
+                    boolean test = (yf < ((yi) * (1 + limiar)));
                     if (test) {
                         break;
                     } else {
@@ -180,21 +180,20 @@ public class curveAnalysisMethods {
                     double caTest = ca[1]*limiar;
                     if(iMethod==0 ||iMethod==1 ||  iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
                         //DB=0, DTRS=1, Silhouette=3, SSE=4
-                        if(ca[0] > ca[1] && ca[1] < ca[2]){ // quando o ponto de inflexão é negativo (para baixo)
-                            test = (ca[0] > caTest && caTest < ca[2] ? true : false);
-                        }
+                        if(ca[0] > ca[1] && ca[1] < ca[2]) // quando o ponto de inflexão é negativo (para baixo)
+                            test = (ca[0] > caTest && caTest < ca[2]);
                     }
                     else{
                         //Dunn=2, XB=5
-                        if(ca[0] < ca[1] && ca[1] > ca[2]) { // quando o ponto de inflexão é positivo (para cima)
-                            test = (ca[0] < caTest && caTest > ca[2] ? true : false);
-                        }
+                        if(ca[0] < ca[1] && ca[1] > ca[2]) // quando o ponto de inflexão é positivo (para cima)
+                            test = (ca[0] < caTest && caTest > ca[2]);
                     }
 
                     //k = ka + 1;
 
-                    if(test && pass == false){
-                        k = ka + 1;
+                    if(test && !pass){
+                        //k = ka + 1;
+                        k = ka;
                         pass = true;
                         //break;
                     }
@@ -204,6 +203,7 @@ public class curveAnalysisMethods {
             // Derivative analysis
             else if (this.curveAnaysisMethod == 4) { //INCOMPLETO
                 // Derivative_analysis_method
+                System.out.println("Derivative_analysis_method");
             }
             // ----------------------------------------------------------------------------------
             // Default

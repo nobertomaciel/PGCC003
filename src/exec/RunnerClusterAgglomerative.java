@@ -35,6 +35,7 @@ import rerank.views.ViewRanker;
 
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
@@ -367,7 +368,7 @@ public class RunnerClusterAgglomerative {
         ArrayList<DigitalObject> outputList;
         Map<Integer,Long> bestkExecutionTime = new HashMap<Integer,Long>();
         for (int i = firstMethodEvaluation; i <= lastMethodEvaluation; i++) {
-        //for (int i = 0; i < methodEvaluation.size(); i ++){
+
             System.out.println(">>> Running agglomerative for bestk...: "+bestk[i]);
             ((AgglomerativeClustering)method).setNUM_CLUSTERS(bestk[i]);
             String evaluationName = methodEvaluation.get(i).getClass().getSimpleName();
@@ -565,45 +566,43 @@ public class RunnerClusterAgglomerative {
                 }
             }
 
+            // Executing Pipeline
             for (int i = 0; i < topicsIDs.length; i++) {
                 runner.run(topicsIDs[i], methodsEvaluation, descriptorNumber);
             }
 
-            // aqui inicia a avaliacao
+            // It starts the evaluations
             for (int i = runner.firstMethodEvaluation; i <= runner.lastMethodEvaluation; i++) {
                 System.out.println(methodsEvaluation.get(i).getClass().getSimpleName());
                 mensurer(methodsEvaluation.get(i).getClass().getSimpleName());
                 System.out.print((";" + totalTime.get(methodsEvaluation.get(i).getClass().getSimpleName().toUpperCase())) + ";" + (totalTime.get(methodsEvaluation.get(i).getClass().getSimpleName().toUpperCase()) / (topicsIDs.length)) + "\n");
             }
 
-            int[] clustersNum = {runner.kMin, runner.kMax};
+            // WriteFile for evaluations
+            int[] clustersNum = {runner.kMin, runner.kMax, runner.trucate_size};
             for (int i = runner.firstMethodEvaluation; i <= runner.lastMethodEvaluation; i++) {
+                clustersNum[2] = runner.allData.get(1).get(i).get("angularCoefficientArr").size();
                 for (int j = 0; j < runner.fm.descriptorNames.size(); j++) {
                     runner.evaluationControl.writeFile(i, runner.fm.descriptorNames.get(j), clustersNum, topicExecutionTime,topicBestK,runner.allData);
                 }
             }
-        java.awt.Toolkit.getDefaultToolkit().beep();
-        }//endfor descriptors
+        }
+        //endfor descriptors
     }
 
 
 
 
     private static void printEffectiveness2(String method) throws FileNotFoundException, IOException {
-        //System.out.println("printEffectiveness2(String method):");
-        //System.out.println("printEffectiveness2..... file: one/results/"+"run_eval"+descritorName+method);
         BufferedReader bf = new BufferedReader(new FileReader("one"+ "/results/"+"run_eval"+descritorName+method));
-        //BufferedReader bf = new BufferedReader(new FileReader("one"+ "/results/"+"run_eval"+descritorName+"_"+method));
         for (int i = 1; i <= 232; i++) {
             bf.readLine();
         }
-        //System.out.println(bf.readLine());
         System.out.print(bf.readLine());
         bf.close();
     }
 
     public static void mensurer(String method){
-        //System.out.println("measurer(String method):");
         try {
             ProcessBuilder pb = new ProcessBuilder("java", "-jar", "div_eval.jar", "-r", "one/results/output_run"+descritorName+method,  "-rgt", "one/resources/rGT", "-dgt", "one/resources/dGT", "-t", "one/resources/one_topics.xml",  "-o", "one/results", "-f", "run_eval"+descritorName+method);
             Process p = pb.start();
