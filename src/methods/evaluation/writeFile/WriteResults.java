@@ -30,6 +30,7 @@ public enum WriteResults {
             int kMin = clustersNum[0];
             int kMax = clustersNum[1];
             int truncateSize = clustersNum[2];
+            int realSize = clustersNum[3];
 
             //for(int j = this.kMin; j <= this.kMax; j++){
             for(int j = truncateSize; j >= kMin; j--){
@@ -52,6 +53,7 @@ public enum WriteResults {
 
             for(Integer key: valueMetrics.keySet()){
                 Map<Integer,Long> time = new HashMap<Integer,Long>();
+
                 int[] bestK = topicBestK.get(key-1);
 
                 values = valueMetrics.get(key).get(methodEvaluationCurrent).getValues();
@@ -60,27 +62,34 @@ public enum WriteResults {
 
 
                 time = topicExecutionTime.get(key-1);
-                //int jFinal = 0;
+                int jFinal = 0;
                 int arrListSize = mediaMovelArr.size();
                 //for(int j = 0; j < values.size(); j++){
-                for(int j = 0; j < arrListSize; j++){
+                //for(int j = 0; j < arrListSize; j++){
+                for(int j = 0; j < truncateSize; j++){
                     bw.write(values.get(j)+",");
-                    //if(j < arrListSize){
-                    mediaMovelValues = mediaMovelArr.get(j);
-                    angularCoefficientValues = angularCoefficientArr.get(j);
-                    //jFinal = j;
-                    //}
-                    //else{
-                    //    mediaMovelValues = mediaMovelArr.get(jFinal);
-                    //    angularCoefficientValues = angularCoefficientArr.get(jFinal);
-                    //}
+                    if(j < arrListSize){
+                         mediaMovelValues = mediaMovelArr.get(j);
+                         angularCoefficientValues = angularCoefficientArr.get(j);
+                         jFinal = j;
+                    }
+                    else{
+                        mediaMovelValues = mediaMovelArr.get(jFinal);
+                        angularCoefficientValues = angularCoefficientArr.get(jFinal);
+                    }
                     bw2.write(mediaMovelValues+",");
                     bw3.write(angularCoefficientValues+",");
                 }
 
-                bw.write(bestK[methodEvaluationCurrent]+",");
-                bw2.write(bestK[methodEvaluationCurrent]+",");
-                bw3.write(bestK[methodEvaluationCurrent]+",");
+                int newBestK = (truncateSize-realSize)+bestK[methodEvaluationCurrent];
+
+                bw.write(newBestK+",");
+                bw2.write(newBestK+",");
+                bw3.write(newBestK+",");
+
+                //bw.write(bestK[methodEvaluationCurrent]+",");
+                //bw2.write(bestK[methodEvaluationCurrent]+",");
+                //bw3.write(bestK[methodEvaluationCurrent]+",");
 
                 bw.write(time.get(methodEvaluationCurrent).toString());
                 bw2.write(time.get(methodEvaluationCurrent).toString());

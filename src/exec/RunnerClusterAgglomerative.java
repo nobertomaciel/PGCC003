@@ -579,9 +579,9 @@ public class RunnerClusterAgglomerative {
             }
 
             // WriteFile for evaluations
-            int[] clustersNum = {runner.kMin, runner.kMax, runner.trucate_size};
+            int[] clustersNum = {runner.kMin, runner.kMax, runner.trucate_size, 0};
             for (int i = runner.firstMethodEvaluation; i <= runner.lastMethodEvaluation; i++) {
-                clustersNum[2] = runner.allData.get(1).get(i).get("angularCoefficientArr").size();
+                clustersNum[3] = runner.allData.get(1).get(i).get("angularCoefficientArr").size(); // changed because issue #17
                 for (int j = 0; j < runner.fm.descriptorNames.size(); j++) {
                     runner.evaluationControl.writeFile(i, runner.fm.descriptorNames.get(j), clustersNum, topicExecutionTime,topicBestK,runner.allData);
                 }
