@@ -46,7 +46,10 @@ public class RunnerClusterAgglomerative {
     String configFileName;
     String inputListDir;
     static String inputList;
-    static int totalDescriptors;
+    //static int totalDescriptors;
+    static int initialDescriptorNumber;
+    static int finalDescriptorNumber;
+    static boolean runArrayDescriptor;
     int kMax;
     int kMin;
     int timerDivisor;
@@ -105,14 +108,14 @@ public class RunnerClusterAgglomerative {
 
         Properties descriptorConfigFile = new Properties();
 
-        int num_descriptors = 0;
+        //int num_descriptors = 0;
 
         String descriptor = "DESCRIPTOR["+descriptorNumber+"]";
         //String descriptor = "DESCRIPTOR[0]";
 
         try {            //executionTime[k] = (System.nanoTime() - startTime)/1000000;// pega o tempo para a execução de kMin a kMax para cada um dos tópicos individualmente (um tópico por vez)
             descriptorConfigFile.load(new FileInputStream("resources/descriptorConfigFile.properties"));
-            num_descriptors = Integer.parseInt(descriptorConfigFile.getProperty("NUM_DESCRIPTORS"));
+            //num_descriptors = Integer.parseInt(descriptorConfigFile.getProperty("NUM_DESCRIPTORS"));
             this.descritorName = descriptorConfigFile.getProperty(descriptor).toUpperCase();
             System.out.println("DESCRIPTOR["+descriptorNumber+"]: "+this.descritorName);
 
@@ -262,6 +265,9 @@ public class RunnerClusterAgglomerative {
     }
 
     public void run(int topicId, ArrayList<IEvaluator> methodEvaluation, int descriptorNumber) {
+
+//        topicExecutionTime.clear();
+//        topicBestK.clear();
 
         System.out.println("run()-------------------------------------------------------------------------------------------");
         System.out.println("public void run(int topicId "+topicId+")");
@@ -514,14 +520,22 @@ public class RunnerClusterAgglomerative {
 
         Properties dataConfigFile = new Properties();
 
+        //List<Integer> arrayDescriptors = new ArrayList<Integer>(Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15));
+        //List<Integer> arrayDescriptors = new ArrayList<Integer>(Arrays.asList());
+        //String[] stringDescriptors;
+
         try {
             dataConfigFile.load(new FileInputStream("resources/descriptorConfigFile.properties"));
-            totalDescriptors = Integer.parseInt(dataConfigFile.getProperty("TOTAL_DESCRIPTORS"));
+            //totalDescriptors = Integer.parseInt(dataConfigFile.getProperty("TOTAL_DESCRIPTORS"));
+            runArrayDescriptor = Boolean.parseBoolean(dataConfigFile.getProperty("RUN_ARRAY_DESCRIPTORS"));
+            initialDescriptorNumber = Integer.parseInt(dataConfigFile.getProperty("INITIAL_DESCRIPTOR_NUMBER"));
+            finalDescriptorNumber = Integer.parseInt(dataConfigFile.getProperty("FINAL_DESCRIPTOR_NUMBER"));
+            //dataConfigFile.getProperty("ARRAY_DESCRIPTORS").split(",")
 
             dataConfigFile.load(new FileInputStream("datasetConfigFile.properties"));
             dataset = dataConfigFile.getProperty("DATASET").toLowerCase();
             inputList = dataConfigFile.getProperty("INPUT").toLowerCase();
-            //totalDescriptors = Integer.parseInt(dataConfigFile.getProperty("TOTAL_DESCRIPTORS"));
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -530,10 +544,20 @@ public class RunnerClusterAgglomerative {
 
         String topicsListFileName = dataset + "/input/" + inputList;
         System.out.println(topicsListFileName);
+
         int[] topicsIDs = readTopicsIds(topicsListFileName);
 
-        // run for all DESCRIPTORS
-        for (int descriptorNumber = 0; descriptorNumber < totalDescriptors; descriptorNumber++) {
+//        if(runArrayDescriptor){
+//            // run array here
+//            int initialDescriptorNumberLocal = 11;
+//            int finalDescriptorNumberLocal = 11;
+//        }
+//        else{
+//            int initialDescriptorNumberLocal = 0;
+//            int finalDescriptorNumberLocal = totalDescriptors-1;
+//        }
+
+        for (int descriptorNumber = initialDescriptorNumber; descriptorNumber <= finalDescriptorNumber; descriptorNumber++) {
             //int descriptorNumber = 0;
 
             RunnerClusterAgglomerative runner = new RunnerClusterAgglomerative(descriptorNumber);

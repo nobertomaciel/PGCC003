@@ -180,12 +180,18 @@ public class curveAnalysisMethods {
                     double caTest = ca[1]*limiar;
                     if(iMethod==0 ||iMethod==1 ||  iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
                         //DB=0, DTRS=1, Silhouette=3, SSE=4
-                        if(ca[0] > ca[1] && ca[1] < ca[2]) // quando o ponto de inflexão é negativo (para baixo)
+                        // quando o ponto de inflexão é negativo (para baixo)
+                        if(ca[0] > ca[1] && ca[1] < ca[2])
+                            // testa se é suficientemente grande
+                            // (se 10% do coeficiente atual ainda é menor que o anterior e o posterior)
                             test = (ca[0] > caTest && caTest < ca[2]);
                     }
                     else{
                         //Dunn=2, XB=5
-                        if(ca[0] < ca[1] && ca[1] > ca[2]) // quando o ponto de inflexão é positivo (para cima)
+                        // quando o ponto de inflexão é positivo (para cima)
+                        if(ca[0] < ca[1] && ca[1] > ca[2])
+                            // testa se é suficientemente pequeno
+                            // (se 10% do coeficiente atual ainda é maior que o anterior e o posterior)
                             test = (ca[0] < caTest && caTest > ca[2]);
                     }
 

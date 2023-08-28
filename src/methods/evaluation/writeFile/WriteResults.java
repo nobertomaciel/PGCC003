@@ -81,11 +81,22 @@ public enum WriteResults {
                     bw3.write(angularCoefficientValues+",");
                 }
 
-                int newBestK = (truncateSize-realSize)+bestK[methodEvaluationCurrent];
+                int newBestK = (truncateSize-arrListSize)+bestK[methodEvaluationCurrent];
+
+                if(newBestK > truncateSize){
+                    newBestK = bestK[methodEvaluationCurrent];
+                }
 
                 bw.write(newBestK+",");
                 bw2.write(newBestK+",");
                 bw3.write(newBestK+",");
+
+                if(newBestK > 99){
+                    System.out.println("Best K outlier: "+newBestK);
+                }
+                else{
+                    System.out.println("Best K OK: "+newBestK);
+                }
 
                 //bw.write(bestK[methodEvaluationCurrent]+",");
                 //bw2.write(bestK[methodEvaluationCurrent]+",");
