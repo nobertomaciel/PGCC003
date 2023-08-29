@@ -79,14 +79,15 @@ public class curveAnalysisMethods {
         interval =  this.movingAverageInterval;
 
         // calcula a média móvel de y para cada k em armazena em array
+        c = 1;
         for(int i = ki;i>=kf;i--){
             yValue = (mapAuxiliar.get(i) == null || mapAuxiliar.get(i) == Double.NaN ? 0 : mapAuxiliar.get(i));
             mediaMovel += yValue;
-            if(c == 0){
+            if(c == 1){
                 yi = mediaMovel;
             }
             else{
-                if(c<=interval-1){
+                if(c<=interval){
                     mediaMovel /= c;
                 }
                 else{
@@ -166,7 +167,8 @@ public class curveAnalysisMethods {
                         continue;
                     }
 
-                    double  coef = (ma-mi)/(ka-ki); // coeficiente do elemento atual, onde: yf = y atual
+                    //double  coef = (ma-mi)/(ka-ki); // coeficiente do elemento atual, onde: yf = y atual
+                    double  coef = (ma-mi)/(ki-ka); // coeficiente do elemento atual, onde: yf = y atual
                     ca[c] = coef;
 
                     angularCoefficientArr.put(i, coef);
