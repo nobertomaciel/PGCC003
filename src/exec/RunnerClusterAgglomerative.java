@@ -266,8 +266,8 @@ public class RunnerClusterAgglomerative {
 
     public void run(int topicId, ArrayList<IEvaluator> methodEvaluation, int descriptorNumber) {
 
-//        topicExecutionTime.clear();
-//        topicBestK.clear();
+        topicExecutionTime.clear();
+        topicBestK.clear();
 
         System.out.println("run()-------------------------------------------------------------------------------------------");
         System.out.println("public void run(int topicId "+topicId+")");

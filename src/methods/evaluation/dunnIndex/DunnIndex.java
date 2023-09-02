@@ -9,8 +9,7 @@ import java.util.*;
 
 
 /**
- * This enum is responsable for create a Instance Singleton patern to allow
- * calculate the Dunn Index
+ * This enum is responsable for create an Instance Singleton patern to allow to calculate the Dunn Index
  */
 
 public enum DunnIndex implements IEvaluator {
@@ -24,8 +23,8 @@ public enum DunnIndex implements IEvaluator {
     }
 
     /**
-     * This Static method is responsable for return a Instance of the Enum(Singleton)
-     * As well as assist in the calculate of the intra distance
+     * This Static method is responsable for return an Instance of the Enum(Singleton)
+     * As well as assist in calculate of the intra distance
      * @return An Instance of Enum
      */
 
@@ -34,7 +33,7 @@ public enum DunnIndex implements IEvaluator {
     }
 
     /**
-     * This method is responsable for assist in the process of the calculate of the Dunn Index
+     * This method is responsable for assist in the process of calculate of the Dunn Index
      * @param clusters The groups formed in the clustering
      * @param fm The file of the configuration
      * @return The Dunn index
@@ -57,7 +56,7 @@ public enum DunnIndex implements IEvaluator {
             for (int i = 0; i < clusters.size(); i++) {
                 intraclusterDIstance = this.getDistanceCluster(clusters.get(i), fm);
 
-                System.out.println(intraclusterDIstance);
+                //System.out.println(intraclusterDIstance);
 
                 for (int j = 0; j < clusters.size(); j++) {
                     if (i != j) {
