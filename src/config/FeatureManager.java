@@ -18,21 +18,16 @@ import object.IDigitalObject;
 public class FeatureManager implements IFeatureManager{
 	String dataset;
 	String descriptorConfigFileName = "resources/descriptorConfigFile.properties";
-
 	String datasetConfigFileName = "datasetConfigFile.properties";
 	String topicsSizeFileName = "resources/topicsSize.map";
 	String topics = "resources/topics.map";
 	int initTopicId, lastTopicId;
 	HashMap<Integer, String> topicsMap = new HashMap<Integer, String>();
-
 	public int numberOfDesc;
-	//public int initialDescriptorNumber;
-	//public int finalDescriptorNumber;
 	public static int descriptorNumber;
 	public ArrayList<String> getDescriptorNames() {
 		return descriptorNames;
 	}
-
 	public ArrayList<String > descriptorNames;
 	int idTopic;
 	String collection_Dir;
@@ -40,7 +35,6 @@ public class FeatureManager implements IFeatureManager{
 	static FeatureManager fmInstance;
 	ArrayList<double[][]> arrayMatrix;
 	HashMap<String, Integer> imageIndex;
-	
 	private boolean normalize;
 	private long randomSeed;
 
@@ -61,7 +55,7 @@ public class FeatureManager implements IFeatureManager{
 	public int getIdTopic(){
 		return this.idTopic;
 	}
-	//Recebe o id do tópico no map para recuperar as informações desse t�pico
+	//Recebe o id do tópico no map para recuperar as informações desse tópico
 	private FeatureManager(int idTopicMap){
 		arrayMatrix = new ArrayList<double[][]>();
 		imageIndex = new HashMap<String, Integer>();
@@ -70,16 +64,8 @@ public class FeatureManager implements IFeatureManager{
 		Properties configFile = new Properties();
 	
 		try {
-				// mudança noberto 21/11/2022
-				//configFile.load(new FileInputStream(datasetConfigFileName));
-				//String numberOfDescriptors  =  configFile.getProperty("TOTAL_DESCRIPTORS");
-				// mudança noberto
-
 				configFile.load(new FileInputStream(descriptorConfigFileName));
 				numberOfDesc = Integer.parseInt(configFile.getProperty("NUM_DESCRIPTORS"));
-				//initialDescriptorNumber = Integer.parseInt(configFile.getProperty("INITIAL_DESCRIPTOR_NUMBER"));
-				//finalDescriptorNumber = Integer.parseInt(configFile.getProperty("FINAL_DESCRIPTOR_NUMBER"));
-				//numberOfDesc = finalDescriptorNumber-initialDescriptorNumber+1;
 				descriptorNames = new ArrayList<String>();
 				collection_Dir = configFile.getProperty("DISTBIN_STORAGE");
 				dataset = configFile.getProperty("DATASET");
@@ -89,13 +75,8 @@ public class FeatureManager implements IFeatureManager{
 
 				//Ler nomes dos descritores for 0 até N ...
 				for(int i = 0; i < numberOfDesc; i++){
-				//for(int i = initialDescriptorNumber; i <= finalDescriptorNumber; i++){
 					descriptorNames.add( configFile.getProperty("DESCRIPTOR["+ i +"]"));
 				}
-
-				//descriptorNames.add( configFile.getProperty("DESCRIPTOR["+ descriptorNumber +"]"));
-				//System.out.println("configFile.getProperty(DESCRIPTOR["+ descriptorNumber +"])");
-
 
 				//Abre o arquivo topics.map
 				Properties topicsConfig = new Properties();
@@ -122,14 +103,12 @@ public class FeatureManager implements IFeatureManager{
 				System.out.println("...."+descriptorNames);
 
 				for(int i = 0; i < numberOfDesc; i++) {
-				//for(int i = initialDescriptorNumber; i <= finalDescriptorNumber; i++) {
 					String topicName = topicsMap.get(idTopic);
 
 					String distBinFileName = (collection_Dir + topicName + "_" + descriptorNames.get(i) + "_dist.bin");
 					
 					System.out.println("....distbin: " + distBinFileName);
 
-					//FileInputStream fileInputStream = new FileInputStream(dataset + File.separator + distBinFileName);
 					FileInputStream fileInputStream = new FileInputStream(distBinFileName);
 					DataInputStream dataInput = new DataInputStream(fileInputStream);
 					
@@ -139,7 +118,6 @@ public class FeatureManager implements IFeatureManager{
 					for(int j = 0; j < numDists; j++){
 						double dist = dataInput.readDouble();
 						distBin.add(dist);
-						//System.out.println(j + ":" + dist);
 					}
 					fileInputStream.close();
 					dataInput.close();
@@ -160,8 +138,9 @@ public class FeatureManager implements IFeatureManager{
 						}
 					}
 					
-					if(this.normalize)
-						matrix = minMaxNorm(matrix);
+					if(this.normalize) {
+                        minMaxNorm(matrix);
+                    }
 		
 					arrayMatrix.add(matrix);
 			}
@@ -195,16 +174,11 @@ public class FeatureManager implements IFeatureManager{
 					max = matrix[i][j];
 			}
 		}
-		
-		int index = 0;
-		//System.out.println("Norm Matrix");
+
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix.length; j++) {
 				double normValue = (matrix[i][j] - min) / (max - min);
 				matrix[i][j] = normValue;
-				
-				//System.out.println(index + "=" + normValue);
-				index++;
 			}
 		}
 		
@@ -233,9 +207,6 @@ public class FeatureManager implements IFeatureManager{
 		for(int i = 0; i < size; i++){
 			meanDistance += valuesDistance[i]; 
 		}
-		//System.out.println("Distancia objeto "+ obj1.getId() +" e "+ obj2.getId());
-
-		//System.out.println("Distancia médiaaaaaaaaaaaaaaaaaaaaaaa "+meanDistance/size);
 		return meanDistance/size;
 	}
 
@@ -308,7 +279,6 @@ public class FeatureManager implements IFeatureManager{
 		int idObject = imageIndex.get(id2);
 
 		for(int i = 0; i < numberOfDesc; i++) {
-		//for(int i = initialDescriptorNumber; i <= finalDescriptorNumber; i++) {
 			double[][] matrix = arrayMatrix.get(i);
 			valueDistance[i] = matrix[target][idObject];
 		}	

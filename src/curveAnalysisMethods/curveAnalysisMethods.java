@@ -181,7 +181,7 @@ public class curveAnalysisMethods {
                     boolean test = false;
                     double caTest = ca[1]*limiar;
                     if(iMethod==0 ||iMethod==1 ||  iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
-                        //DB=0, DTRS=1, Silhouette=3, SSE=4
+                        //DB=0, DTRS=1, Silhouette=3, SSE=4Q
                         // quando o ponto de inflexão é negativo (para baixo)
                         if(ca[0] > ca[1] && ca[1] < ca[2])
                             // testa se é suficientemente grande
@@ -200,8 +200,8 @@ public class curveAnalysisMethods {
                     //k = ka + 1;
 
                     if(test && !pass){
-                        //k = ka + 1;
-                        k = ka;
+                        k = ka + 1;
+                        //k = ka;
                         pass = true;
                         //break;
                     }
@@ -226,7 +226,7 @@ public class curveAnalysisMethods {
         }
         // acrescentar controle de validação erro de index
         if(k == 0) {
-            k = ka;
+            k = ka+1;
         }
 
         returnArr.put("k", new TreeMap<Integer,Double>());

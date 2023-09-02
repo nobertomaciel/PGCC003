@@ -41,30 +41,46 @@ public enum DunnIndex implements IEvaluator {
      */
     @Override
     public double runEvaluation(ArrayList<ArrayList<DigitalObject>> clusters, FeatureManager fm) {
+        // 1 = min(intercluster)/max(intracluster) - intercluster(other clusters) - intracluster(same cluster)
+        // 2 = min(min(dInter(Ci,Cj)/max(Ck))) - Ck(intracluster distance)
+        int calcType = 1;
+
         double jminimum = Double.MAX_VALUE;
         double iminimum = Double.MAX_VALUE;
-        this.distanceIntra = getDistanceIntra(clusters, fm); // não deveria ser distância média? não utilizo
-        double distanceCluster;
-        double distance;
 
-        for (int i = 0; i < clusters.size(); i++){
-            distanceCluster = this.getDistanceCluster(clusters.get(i), fm);
-            for(int j = 0; j < clusters.size(); j++){
-                if(i != j){
-                    distance = this.getDistance(clusters.get(i), clusters. get(j), fm);
-                    if (distance < jminimum){
-                        jminimum = (distance/distanceCluster);
+        distanceIntra = getDistanceIntra(clusters, fm); // não deveria ser distância média? não utilizo
+        double intraclusterDIstance; // objects in the same cluster
+        double interclusterDistance; // objects in the other cluster
+
+        if (calcType == 1) {
+            System.out.println("Dunn Index calculated by type 1 calc");
+            for (int i = 0; i < clusters.size(); i++) {
+                intraclusterDIstance = this.getDistanceCluster(clusters.get(i), fm);
+
+                System.out.println(intraclusterDIstance);
+
+                for (int j = 0; j < clusters.size(); j++) {
+                    if (i != j) {
+                        interclusterDistance = this.getDistance(clusters.get(i), clusters.get(j), fm);
+                        if (interclusterDistance < jminimum) {
+                            jminimum = (interclusterDistance / intraclusterDIstance);
+                        }
                     }
                 }
+                if (jminimum < iminimum) {
+                    iminimum = jminimum;
+                }
             }
-            if (jminimum < iminimum){
-                iminimum = jminimum;
-            }
+
+            if (iminimum == Double.MAX_VALUE)
+                iminimum = 0;
+
+            if (!valuesIndex.containsKey(iminimum))
+                valuesIndex.put(iminimum, clusters.size());
         }
-
-        if(!valuesIndex.containsKey(iminimum))
-            valuesIndex.put(iminimum,clusters.size());
-
+        else{
+            System.out.println("Dunn Index calculated by type 2 calc");
+        }
         return iminimum;
     }
 
