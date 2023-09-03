@@ -181,7 +181,7 @@ public class curveAnalysisMethods {
                     boolean test = false;
                     double caTest = ca[1]*limiar;
                     if(iMethod==0 ||iMethod==1 ||  iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
-                        //DB=0, DTRS=1, Silhouette=3, SSE=4Q
+                        //DB=0, DTRS=1, Silhouette=3, SSE=4
                         // quando o ponto de inflexão é negativo (para baixo)
                         if(ca[0] > ca[1] && ca[1] < ca[2])
                             // testa se é suficientemente grande
