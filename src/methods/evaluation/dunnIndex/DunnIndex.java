@@ -52,7 +52,7 @@ public enum DunnIndex implements IEvaluator {
         double interclusterDistance; // objects in the other cluster
 
         if (calcType == 1) {
-            System.out.println("Dunn Index calculated by type 1 calc");
+//            System.out.println("Dunn Index calculated by type 1 calc");
             for (int i = 0; i < clusters.size(); i++) {
                 intraclusterDIstance = this.getDistanceCluster(clusters.get(i), fm);
 

@@ -1,10 +1,6 @@
 package config;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -18,16 +14,19 @@ import object.IDigitalObject;
 public class FeatureManager implements IFeatureManager{
 	String dataset;
 	String descriptorConfigFileName = "resources/descriptorConfigFile.properties";
+
 	String datasetConfigFileName = "datasetConfigFile.properties";
 	String topicsSizeFileName = "resources/topicsSize.map";
 	String topics = "resources/topics.map";
 	int initTopicId, lastTopicId;
 	HashMap<Integer, String> topicsMap = new HashMap<Integer, String>();
+
 	public int numberOfDesc;
 	public static int descriptorNumber;
 	public ArrayList<String> getDescriptorNames() {
 		return descriptorNames;
 	}
+
 	public ArrayList<String > descriptorNames;
 	int idTopic;
 	String collection_Dir;
@@ -35,6 +34,7 @@ public class FeatureManager implements IFeatureManager{
 	static FeatureManager fmInstance;
 	ArrayList<double[][]> arrayMatrix;
 	HashMap<String, Integer> imageIndex;
+
 	private boolean normalize;
 	private long randomSeed;
 
@@ -55,7 +55,7 @@ public class FeatureManager implements IFeatureManager{
 	public int getIdTopic(){
 		return this.idTopic;
 	}
-	//Recebe o id do tópico no map para recuperar as informações desse tópico
+	//Recebe o id do tópico no map para recuperar as informações desse t�pico
 	private FeatureManager(int idTopicMap){
 		arrayMatrix = new ArrayList<double[][]>();
 		imageIndex = new HashMap<String, Integer>();
@@ -64,8 +64,16 @@ public class FeatureManager implements IFeatureManager{
 		Properties configFile = new Properties();
 
 		try {
+			// mudança noberto 21/11/2022
+//				configFile.load(new FileInputStream(datasetConfigFileName));
+//				String numberOfDescriptors  =  configFile.getProperty("TOTAL_DESCRIPTORS");
+			// mudança noberto
+
 			configFile.load(new FileInputStream(descriptorConfigFileName));
-			numberOfDesc = Integer.parseInt(configFile.getProperty("NUM_DESCRIPTORS"));
+			String numberOfDescriptors  =  configFile.getProperty("NUM_DESCRIPTORS");
+
+
+			numberOfDesc = Integer.parseInt(numberOfDescriptors);
 			descriptorNames = new ArrayList<String>();
 			collection_Dir = configFile.getProperty("DISTBIN_STORAGE");
 			dataset = configFile.getProperty("DATASET");
@@ -73,10 +81,16 @@ public class FeatureManager implements IFeatureManager{
 			this.randomSeed = Long.parseLong(configFile.getProperty("RANDOM_SEED"));
 
 
+			// este for foi descomentado em 21/11/2022
 			//Ler nomes dos descritores for 0 até N ...
-			for(int i = 0; i < numberOfDesc; i++){
-				descriptorNames.add( configFile.getProperty("DESCRIPTOR["+ i +"]"));
-			}
+//				for(int i = 0; i < numberOfDesc; i++){
+//					descriptorNames.add( configFile.getProperty("DESCRIPTOR["+ i +"]"));
+//				}
+			// este for foi descomentado em 21/11/2022
+
+			descriptorNames.add( configFile.getProperty("DESCRIPTOR["+ this.descriptorNumber +"]"));
+			System.out.println("configFile.getProperty(DESCRIPTOR["+ this.descriptorNumber +"])");
+
 
 			//Abre o arquivo topics.map
 			Properties topicsConfig = new Properties();
@@ -109,6 +123,7 @@ public class FeatureManager implements IFeatureManager{
 
 				System.out.println("....distbin: " + distBinFileName);
 
+				//FileInputStream fileInputStream = new FileInputStream(dataset + File.separator + distBinFileName);
 				FileInputStream fileInputStream = new FileInputStream(distBinFileName);
 				DataInputStream dataInput = new DataInputStream(fileInputStream);
 
@@ -118,6 +133,7 @@ public class FeatureManager implements IFeatureManager{
 				for(int j = 0; j < numDists; j++){
 					double dist = dataInput.readDouble();
 					distBin.add(dist);
+					//System.out.println(j + ":" + dist);
 				}
 				fileInputStream.close();
 				dataInput.close();
@@ -138,11 +154,38 @@ public class FeatureManager implements IFeatureManager{
 					}
 				}
 
-				if(this.normalize) {
-					minMaxNorm(matrix);
-				}
+				if(this.normalize)
+					matrix = minMaxNorm(matrix);
 
 				arrayMatrix.add(matrix);
+
+				// tentar aninhar apenas a primeira linha de cada tópico no arquivo objetos
+				// tentar aninhar apenas a primeira linha de cada tópico no arquivo objetos
+				// tentar aninhar apenas a primeira linha de cada tópico no arquivo objetos
+				String dir = System.getProperty("user.dir");
+				File file = new File(dir+"/one/results/objectsDist/objects_"+descriptorNames.get(i)+"_topic_"+idTopic+".txt");
+				try{
+					BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
+					for(int l = 0; l < size; l++){
+						String sep = ",";
+						if(l>=(size-1))
+							sep = "";
+						bw.write(l+sep);
+					}
+					bw.newLine();
+//					for(int l = 0; l < size; l++){
+						String sep = ",";
+						for(int c = 0; c < size; c++){
+							if(c>=(size-1))
+								sep = "";
+							bw.write(matrix[0][c]+sep);
+						}
+						bw.newLine();
+//					}
+					bw.close();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 			}
 
 			Properties topicMap = new Properties();
@@ -175,10 +218,15 @@ public class FeatureManager implements IFeatureManager{
 			}
 		}
 
+		int index = 0;
+		//System.out.println("Norm Matrix");
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix.length; j++) {
 				double normValue = (matrix[i][j] - min) / (max - min);
 				matrix[i][j] = normValue;
+
+				//System.out.println(index + "=" + normValue);
+				index++;
 			}
 		}
 
@@ -207,6 +255,9 @@ public class FeatureManager implements IFeatureManager{
 		for(int i = 0; i < size; i++){
 			meanDistance += valuesDistance[i];
 		}
+		//System.out.println("Distancia objeto "+ obj1.getId() +" e "+ obj2.getId());
+
+		//System.out.println("Distancia média: "+meanDistance/size);
 		return meanDistance/size;
 	}
 
@@ -255,10 +306,9 @@ public class FeatureManager implements IFeatureManager{
 		//System.out.println("Aqui o objeto "+ target +" "+idObject);
 
 		for(int i = 0; i < numberOfDesc; i++) {
-			//for(int i = initialDescriptorNumber; i <= finalDescriptorNumber; i++) {
 			double[][] matrix = arrayMatrix.get(i);
 			valueDistance[i] = matrix[target][idObject];
-			//System.out.println("Aqu o objeto "+ matrix[target][idObject]);
+			//System.out.println("Aqui o objeto "+ matrix[target][idObject]);
 		}
 
 		return valueDistance;

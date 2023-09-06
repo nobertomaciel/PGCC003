@@ -40,6 +40,7 @@ public class AgglomerativeClustering implements IDiversify {
 		System.out.println("....original list size: " + originalList.size());
 		
 		configFile = new Properties();
+
 		
 		try {
 			configFile.load(new FileInputStream("resources/agglomerative.properties"));
