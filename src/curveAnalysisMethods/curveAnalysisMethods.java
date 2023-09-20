@@ -179,22 +179,33 @@ public class curveAnalysisMethods {
 
                     //DB=0, DTRS=1, Dunn=2, Silhouette=3, SSE=4, XB=5
                     boolean test = false;
-                    double caTest = ca[1]*limiar;
-                    if(iMethod==0 ||iMethod==1 ||  iMethod==3 || iMethod==4){ //métodos cujo coeficiente angular será selecionado pelo mínimo
-                        //DB=0, DTRS=1, Silhouette=3, SSE=4
+                    double caTest = 0;
+
+//                    Best k from minimal values (use negative inflection):
+//                        DTRS,SSE, Xie Beni, Davies Bouldin
+//                    Best k from maximum values (use positive inflection):
+//                        Silhouette,Dunn
+
+                    //métodos cujo best k será selecionado pelo valor mínimo da MovingAVG
+                    if(iMethod==0 ||iMethod==1 ||  iMethod==4 || iMethod==5){
+                        //DB=0, DTRS=1, SSE=4, XB=5
                         // quando o ponto de inflexão é negativo (para baixo)
-                        if(ca[0] > ca[1] && ca[1] < ca[2])
+                        if(ca[0] > ca[1] && ca[1] < ca[2]) {
+                            caTest = ca[1] / limiar;
                             // testa se é suficientemente grande
                             // (se 10% do coeficiente atual ainda é menor que o anterior e o posterior)
                             test = (ca[0] > caTest && caTest < ca[2]);
+                        }
                     }
                     else{
-                        //Dunn=2, XB=5
+                        //Dunn=2, Silhouette=3
                         // quando o ponto de inflexão é positivo (para cima)
-                        if(ca[0] < ca[1] && ca[1] > ca[2])
+                        if(ca[0] < ca[1] && ca[1] > ca[2]) {
+                            caTest = ca[1] * limiar;
                             // testa se é suficientemente pequeno
                             // (se 10% do coeficiente atual ainda é maior que o anterior e o posterior)
                             test = (ca[0] < caTest && caTest > ca[2]);
+                        }
                     }
 
                     //k = ka + 1;

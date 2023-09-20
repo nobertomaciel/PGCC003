@@ -199,7 +199,7 @@ public class RunnerClusterAgglomerative {
             this.runTextRanker = Boolean.parseBoolean(configFile.getProperty("RUN_TEXT_RANKER"));
             this.runBordaFusionReRanker = Boolean.parseBoolean(configFile.getProperty("RUN_BORDA_FUSION_RANKER"));
             this.runListTrucating = Boolean.parseBoolean(configFile.getProperty("RUN_LIST_TRUNCATING"));
-            this.trucate_size = Integer.parseInt(configFile.getProperty("TRUNCATE_SIZE"));
+//            this.trucate_size = Integer.parseInt(configFile.getProperty("TRUNCATE_SIZE"));
             this.RE_SORT_SELECTION_METHOD = Integer.parseInt(configFile.getProperty("RE_SORT_SELECTION_METHOD"));
             this.outputListSize = Integer.parseInt(configFile.getProperty("OUTPUT_LIST_SIZE"));
 
