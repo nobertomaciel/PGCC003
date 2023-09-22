@@ -32,8 +32,8 @@ public enum WriteResults {
             int truncateSize = clustersNum[2];
             int realSize = clustersNum[3];
 
-            //for(int j = this.kMin; j <= this.kMax; j++){
-            for(int j = truncateSize; j >= kMin; j--){
+            for(int j = kMin; j <= kMax; j++){
+//            for(int j = truncateSize; j >= kMin; j--){ //this line was used when TRUNCATE value was different of NUM_CLUSTERS
                     bw.write(j+",");
                     bw2.write(j+",");
                     bw3.write(j+",");

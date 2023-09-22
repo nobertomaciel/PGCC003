@@ -127,7 +127,6 @@ public class curveAnalysisMethods {
                     v[0] = v[1];
                 }
             }
-
             // ----------------------------------------------------------------------------------
             // Monotonicity analysis
             else if (this.curveAnaysisMethod == 2) {
@@ -140,7 +139,6 @@ public class curveAnalysisMethods {
                     k = ka-1;
                 }
             }
-
             // ----------------------------------------------------------------------------------
             // Monotonicity analysis with moving average
             else if (this.curveAnaysisMethod == 3 || this.curveAnaysisMethod == 5 || this.curveAnaysisMethod == 7) {
@@ -173,48 +171,66 @@ public class curveAnalysisMethods {
 
                     angularCoefficientArr.put(i, coef);
 
-                    if(c == 2){
-                        c = -1;
-                    }
+//                    if(c == 2){
+//                        c = -1;
+//                    }
 
-                    //DB=0, DTRS=1, Dunn=2, Silhouette=3, SSE=4, XB=5
-                    boolean test = false;
-                    double caTest = 0;
+                    System.out.println("........................................................................");
+                    System.out.println("(ma-mi)/(ki-ka).: "+"("+ma+"-"+mi+")/("+ki+"-"+ka+")");
+                    System.out.println("coef............: "+coef);
 
-//                    Best k from minimal values (use negative inflection):
-//                        DTRS,SSE, Xie Beni, Davies Bouldin
-//                    Best k from maximum values (use positive inflection):
-//                        Silhouette,Dunn
+                    if(c >= 2){
+                            //DB=0, DTRS=1, Dunn=2, Silhouette=3, SSE=4, XB=5
+                            boolean test = false;
+                            double caTest = 0;
+                            double avgPoint = (ca[0]+ca[2])/2;
+                            double distInflection = avgPoint-ca[1];
 
-                    //métodos cujo best k será selecionado pelo valor mínimo da MovingAVG
-                    if(iMethod==0 ||iMethod==1 ||  iMethod==4 || iMethod==5){
-                        //DB=0, DTRS=1, SSE=4, XB=5
-                        // quando o ponto de inflexão é negativo (para baixo)
-                        if(ca[0] > ca[1] && ca[1] < ca[2]) {
-                            caTest = ca[1] / limiar;
-                            // testa se é suficientemente grande
-                            // (se 10% do coeficiente atual ainda é menor que o anterior e o posterior)
-                            test = (ca[0] > caTest && caTest < ca[2]);
+                            System.out.println("ca..............: [ "+ca[0]+" "+ca[1]+" "+ca[2]+" ]");
+                            System.out.println("avgPoint........: "+avgPoint+" -> "+((ca[0]+ca[2])/2));
+                            System.out.println("distInflection..: "+distInflection+" -> "+(avgPoint-ca[1]));
+                            System.out.println("........................................................................");
+
+        //                    Best k from minimal values (use negative inflection):
+        //                        DTRS,SSE, Xie Beni, Davies Bouldin
+        //                    Best k from maximum values (use positive inflection):
+        //                        Silhouette,Dunn
+
+                            //métodos cujo best k será selecionado pelo valor mínimo da MovingAVG
+                            if(iMethod==2 || iMethod==3){
+                                //Dunn=2, Silhouette=3
+                                // quando o ponto de inflexão é positivo (para cima)
+                                if(ca[0] < ca[1] && ca[1] > ca[2]) {
+                                    caTest = avgPoint+(distInflection * limiar);
+                                    // testa se é suficientemente pequeno
+                                    // (se 10% do coeficiente atual ainda é maior que o anterior e o posterior)
+                                    test = (ca[0] < caTest && caTest > ca[2]);
+                                }
+                            }
+                            else{
+                                //DB=0, DTRS=1, SSE=4, XB=5
+                                // quando o ponto de inflexão é negativo (para baixo)
+                                if(ca[0] > ca[1] && ca[1] < ca[2]) {
+                                    caTest = avgPoint-(distInflection * limiar);
+                                    // testa se é suficientemente grande
+                                    // (se 10% do coeficiente atual ainda é menor que o anterior e o posterior)
+                                    test = (ca[0] > caTest && caTest < ca[2]);
+                                }
+                            }
+
+                        // não é necessário break, pois, é necessário que todo o processo seja executado para preencher os arrays de relatório
+                        if(test && !pass){
+                            k = ka;
+                            pass = true;
+                            System.out.println("........................................................................");
+                            System.out.println("                              BREAKED");
+                            System.out.println("caTest..........: "+caTest);
+                            System.out.println("........................................................................");
                         }
-                    }
-                    else{
-                        //Dunn=2, Silhouette=3
-                        // quando o ponto de inflexão é positivo (para cima)
-                        if(ca[0] < ca[1] && ca[1] > ca[2]) {
-                            caTest = ca[1] * limiar;
-                            // testa se é suficientemente pequeno
-                            // (se 10% do coeficiente atual ainda é maior que o anterior e o posterior)
-                            test = (ca[0] < caTest && caTest > ca[2]);
-                        }
-                    }
 
-                    //k = ka + 1;
-
-                    if(test && !pass){
-                        k = ka + 1;
-                        //k = ka;
-                        pass = true;
-                        //break;
+                        ca[0] = ca[1];
+                        ca[1] = ca[2];
+                        c = 1;
                     }
                 }
             }
@@ -249,6 +265,24 @@ public class curveAnalysisMethods {
         returnArr.put("mediaMovelArr", mediaMovelArr);
         returnArr.put("angularCoefficientArr", angularCoefficientArr);
 
+        System.out.println("\n................................................................................................................");
+        System.out.println("moving average data:");
+        for(int i=1;i<=returnArr.get("mediaMovelArr").size();i++) {
+            System.out.print("("+i+","+returnArr.get("mediaMovelArr").get(i)+"),");
+        }
+        System.out.println("\nangular coefficient data:");
+        for(int i=1;i<=returnArr.get("angularCoefficientArr").size();i++) {
+            System.out.print("("+i+","+returnArr.get("angularCoefficientArr").get(i)+"),");
+        }
+        System.out.println("\nangular coefficient data:");
+        for(int i=1;i<=returnArr.get("angularCoefficientArr").size();i++) {
+            System.out.print(returnArr.get("angularCoefficientArr").get(i)+",");
+        }
+        System.out.println("\nevaluation data:");
+        for(int i=1;i<=mapAuxiliar.size();i++) {
+            System.out.print("("+i+","+mapAuxiliar.get(i)+"),");
+        }
+        System.out.println("\n................................................................................................................");
         return returnArr;
     }
 }
