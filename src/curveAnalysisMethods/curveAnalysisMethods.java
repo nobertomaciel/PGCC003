@@ -195,7 +195,8 @@ public class curveAnalysisMethods {
         //                        Silhouette,Dunn
 
                             //métodos cujo best k será selecionado pelo valor mínimo da MovingAVG
-                            if(iMethod==2 || iMethod==3){
+//                            if(iMethod==2 || iMethod==3){
+                            if(iMethod==3){
                                 //Dunn=2, Silhouette=3
                                 // quando o ponto de inflexão é positivo (para cima)
                                 if(ca[0] < ca[1] && ca[1] > ca[2]) {
