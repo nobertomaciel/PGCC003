@@ -184,12 +184,10 @@ public class curveAnalysisMethods {
                             boolean test = false;
                             double caTest = 0;
                             double avgPoint = (ca[0]+ca[2])/2;
-                            double distInflection = avgPoint-ca[1];
+                            double distInflection = 0;
 
                             System.out.println("ca..............: [ "+ca[0]+" "+ca[1]+" "+ca[2]+" ]");
                             System.out.println("avgPoint........: "+avgPoint+" -> "+((ca[0]+ca[2])/2));
-                            System.out.println("distInflection..: "+distInflection+" -> "+(avgPoint-ca[1]));
-                            System.out.println("........................................................................");
 
         //                    Best k from minimal values (use negative inflection):
         //                        DTRS,SSE, Xie Beni, Davies Bouldin
@@ -201,6 +199,7 @@ public class curveAnalysisMethods {
                                 //Dunn=2, Silhouette=3
                                 // quando o ponto de inflexão é positivo (para cima)
                                 if(ca[0] < ca[1] && ca[1] > ca[2]) {
+                                    distInflection = ca[1]-avgPoint;
                                     caTest = avgPoint+(distInflection * limiar);
                                     // testa se é suficientemente pequeno
                                     // (se 10% do coeficiente atual ainda é maior que o anterior e o posterior)
@@ -211,12 +210,16 @@ public class curveAnalysisMethods {
                                 //DB=0, DTRS=1, SSE=4, XB=5
                                 // quando o ponto de inflexão é negativo (para baixo)
                                 if(ca[0] > ca[1] && ca[1] < ca[2]) {
+                                    distInflection = avgPoint-ca[1];
                                     caTest = avgPoint-(distInflection * limiar);
                                     // testa se é suficientemente grande
                                     // (se 10% do coeficiente atual ainda é menor que o anterior e o posterior)
                                     test = (ca[0] > caTest && caTest < ca[2]);
                                 }
                             }
+
+                        System.out.println("distInflection..: "+distInflection+" -> "+(avgPoint-ca[1]));
+                        System.out.println("........................................................................");
 
                         // não é necessário break, pois, é necessário que todo o processo seja executado para preencher os arrays de relatório
                         if(test && !pass){
