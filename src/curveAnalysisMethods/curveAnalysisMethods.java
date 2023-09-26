@@ -195,9 +195,9 @@ public class curveAnalysisMethods {
         //                        Silhouette,Dunn
 
                             //métodos cujo best k será selecionado pelo valor mínimo da MovingAVG
-//                            if(iMethod==2 || iMethod==3){
-                            if(iMethod==3){
-                                // Silhouette=3
+                            if(iMethod==2 || iMethod==3){
+//                            if(iMethod==3){
+                                // Dunn=2, Silhouette=3
                                 // quando o ponto de inflexão é positivo (para cima)
                                 if(ca[0] < ca[1] && ca[1] > ca[2]) {
                                     distInflection = ca[1]-avgPoint;
@@ -211,7 +211,7 @@ public class curveAnalysisMethods {
                                 // o Dunn Index, por conta da sua natureza de maximização para um best K, deveria
                                 // estar no if, juntamente com o Silhouette. Porém, devido o comportamento geral
                                 // da sua curva, côncava, foi necessário fazer a análise pela inflexão negativa
-                                // DB=0, DTRS=1, Dunn=2, SSE=4, XB=5
+                                // DB=0, DTRS=1, SSE=4, XB=5
                                 // quando o ponto de inflexão é negativo (para baixo)
                                 if(ca[0] > ca[1] && ca[1] < ca[2]) {
                                     distInflection = avgPoint-ca[1];
