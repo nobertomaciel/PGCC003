@@ -91,12 +91,12 @@ public enum WriteResults {
                 bw2.write(newBestK+",");
                 bw3.write(newBestK+",");
 
-                if(newBestK > 99){
-                    System.out.println("Best K outlier: "+newBestK);
-                }
-                else{
-                    System.out.println("Best K OK: "+newBestK);
-                }
+//                if(newBestK > 99){
+//                    System.out.println("Best K outlier: "+newBestK);
+//                }
+//                else{
+//                    System.out.println("Best K OK: "+newBestK);
+//                }
 
                 //bw.write(bestK[methodEvaluationCurrent]+",");
                 //bw2.write(bestK[methodEvaluationCurrent]+",");

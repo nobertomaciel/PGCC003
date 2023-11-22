@@ -71,10 +71,10 @@ public class curveAnalysisMethods {
 
         readFile();
 
-        if(firstMethodEvaluation == iMethod){
-            System.out.println("CURVE_ANALYSIS_METHOD: "+this.curveAnaysisMethod);
-            System.out.println("CURVE_ANALYSIS_METHOD_THRESHOLD: "+this.limiar);
-        }
+//        if(firstMethodEvaluation == iMethod){
+//            System.out.println("CURVE_ANALYSIS_METHOD: "+this.curveAnaysisMethod);
+//            System.out.println("CURVE_ANALYSIS_METHOD_THRESHOLD: "+this.limiar);
+//        }
 
         interval =  this.movingAverageInterval;
 
@@ -175,9 +175,9 @@ public class curveAnalysisMethods {
 //                        c = -1;
 //                    }
 
-                    System.out.println("........................................................................");
-                    System.out.println("(ma-mi)/(ki-ka).: "+"("+ma+"-"+mi+")/("+ki+"-"+ka+")");
-                    System.out.println("coef............: "+coef);
+//                    System.out.println("........................................................................");
+//                    System.out.println("(ma-mi)/(ki-ka).: "+"("+ma+"-"+mi+")/("+ki+"-"+ka+")");
+//                    System.out.println("coef............: "+coef);
 
                     if(c >= 2){
                             //DB=0, DTRS=1, Dunn=2, Silhouette=3, SSE=4, XB=5
@@ -186,8 +186,8 @@ public class curveAnalysisMethods {
                             double avgPoint = (ca[0]+ca[2])/2;
                             double distInflection = 0;
 
-                            System.out.println("ca..............: [ "+ca[0]+" "+ca[1]+" "+ca[2]+" ]");
-                            System.out.println("avgPoint........: "+avgPoint+" -> "+((ca[0]+ca[2])/2));
+                            //System.out.println("ca..............: [ "+ca[0]+" "+ca[1]+" "+ca[2]+" ]");
+                            //System.out.println("avgPoint........: "+avgPoint+" -> "+((ca[0]+ca[2])/2));
 
         //                    Best k from minimal values (use negative inflection):
         //                        DTRS,SSE, Xie Beni, Davies Bouldin
@@ -222,17 +222,17 @@ public class curveAnalysisMethods {
                                 }
                             }
 
-                        System.out.println("distInflection..: "+distInflection+" -> "+(avgPoint-ca[1]));
-                        System.out.println("........................................................................");
+                        //System.out.println("distInflection..: "+distInflection+" -> "+(avgPoint-ca[1]));
+                        //System.out.println("........................................................................");
 
                         // não é necessário break, pois, é necessário que todo o processo seja executado para preencher os arrays de relatório
                         if(test && !pass){
                             k = ka;
                             pass = true;
-                            System.out.println("........................................................................");
-                            System.out.println("                              BREAKED");
-                            System.out.println("caTest..........: "+caTest);
-                            System.out.println("........................................................................");
+                            //System.out.println("........................................................................");
+                            //System.out.println("                              BREAKED");
+                            //System.out.println("caTest..........: "+caTest);
+                            //System.out.println("........................................................................");
                         }
 
                         ca[0] = ca[1];
@@ -245,7 +245,7 @@ public class curveAnalysisMethods {
             // Derivative analysis
             else if (this.curveAnaysisMethod == 4) { //INCOMPLETO
                 // Derivative_analysis_method
-                System.out.println("Derivative_analysis_method");
+                //System.out.println("Derivative_analysis_method");
             }
             // ----------------------------------------------------------------------------------
             // Default
@@ -272,24 +272,24 @@ public class curveAnalysisMethods {
         returnArr.put("mediaMovelArr", mediaMovelArr);
         returnArr.put("angularCoefficientArr", angularCoefficientArr);
 
-        System.out.println("\n................................................................................................................");
-        System.out.println("moving average data:");
-        for(int i=1;i<=returnArr.get("mediaMovelArr").size();i++) {
-            System.out.print("("+i+","+returnArr.get("mediaMovelArr").get(i)+"),");
-        }
-        System.out.println("\nangular coefficient data:");
-        for(int i=1;i<=returnArr.get("angularCoefficientArr").size();i++) {
-            System.out.print("("+i+","+returnArr.get("angularCoefficientArr").get(i)+"),");
-        }
-        System.out.println("\nangular coefficient data:");
-        for(int i=1;i<=returnArr.get("angularCoefficientArr").size();i++) {
-            System.out.print(returnArr.get("angularCoefficientArr").get(i)+",");
-        }
-        System.out.println("\nevaluation data:");
-        for(int i=1;i<=mapAuxiliar.size();i++) {
-            System.out.print("("+i+","+mapAuxiliar.get(i)+"),");
-        }
-        System.out.println("\n................................................................................................................");
+        //System.out.println("\n................................................................................................................");
+        //System.out.println("moving average data:");
+//        for(int i=1;i<=returnArr.get("mediaMovelArr").size();i++) {
+//            System.out.print("("+i+","+returnArr.get("mediaMovelArr").get(i)+"),");
+//        }
+//        System.out.println("\nangular coefficient data:");
+//        for(int i=1;i<=returnArr.get("angularCoefficientArr").size();i++) {
+//            System.out.print("("+i+","+returnArr.get("angularCoefficientArr").get(i)+"),");
+//        }
+//        System.out.println("\nangular coefficient data:");
+//        for(int i=1;i<=returnArr.get("angularCoefficientArr").size();i++) {
+//            System.out.print(returnArr.get("angularCoefficientArr").get(i)+",");
+//        }
+//        System.out.println("\nevaluation data:");
+//        for(int i=1;i<=mapAuxiliar.size();i++) {
+//            System.out.print("("+i+","+mapAuxiliar.get(i)+"),");
+//        }
+//        System.out.println("\n................................................................................................................");
         return returnArr;
     }
 }
