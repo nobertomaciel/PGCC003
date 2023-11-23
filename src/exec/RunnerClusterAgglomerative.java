@@ -470,9 +470,9 @@ public class RunnerClusterAgglomerative {
 
     private void auxiliarError(ArrayList<ArrayList<DigitalObject>> cluster){
         System.out.println("....auxiliarError:");
-        for(int i = 0; i < cluster.size(); i++){
-            // System.out.println("Cluster "+i+" > k = "+cluster.size()+ "------------------------------------------------------->"+cluster.get(i).size());
-        }
+//        for(int i = 0; i < cluster.size(); i++){
+//            // System.out.println("Cluster "+i+" > k = "+cluster.size()+ "------------------------------------------------------->"+cluster.get(i).size());
+//        }
     }
 
     private ArrayList<DigitalObject> runBlurFilter(ArrayList<DigitalObject> inputList, String topicName) {
