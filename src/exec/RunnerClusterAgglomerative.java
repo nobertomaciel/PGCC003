@@ -357,7 +357,7 @@ public class RunnerClusterAgglomerative {
             allData.get(topicId).put(i, innerMap);
 
             double kd = returnBestKTree.get("k").get(1);
-            bestk[i] = (int)kd;
+            bestk[i] = (int)kd-1;
             String methodName = methodEvaluation.get(i).getClass().getSimpleName().toUpperCase();
             String sep = separator("........................................",(methodName.length() + String.valueOf(bestk[i]).length()));
             System.out.format("....%s %s: %d (Time nanoTime/TIMER_DIVISOR: %d)%n", methodName, sep, bestk[i],executionTime[bestk[i]]);
