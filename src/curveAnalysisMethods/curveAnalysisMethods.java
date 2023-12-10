@@ -260,7 +260,8 @@ public class curveAnalysisMethods {
         }
         // acrescentar controle de validação erro de index
         if(k == 0) {
-            k = ka+1;
+//            k = ka+1;
+            k = ka;
         }
 
         returnArr.put("k", new TreeMap<Integer,Double>());
