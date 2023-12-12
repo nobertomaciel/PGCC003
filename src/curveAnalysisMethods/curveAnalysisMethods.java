@@ -153,7 +153,8 @@ public class curveAnalysisMethods {
                     if (test) {
                         break;
                     } else {
-                        k = ka + 1;
+//                        k = ka + 1;
+                        k = ka;
                     }
                 }
                 else if(this.curveAnaysisMethod == 5){

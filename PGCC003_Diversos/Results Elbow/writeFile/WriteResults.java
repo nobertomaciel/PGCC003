@@ -1,5 +1,4 @@
 package methods.evaluation.writeFile;
-import exec.RunnerClusterAgglomerative;
 import methods.evaluationControl.EvaluationResult;
 
 import java.io.*;

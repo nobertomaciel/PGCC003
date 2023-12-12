@@ -30,7 +30,8 @@ public class KMeans implements IDiversify {
 	private int MAX_ITERATIONS;
 	private Properties configFile;
 	private int totNumIterations;
-
+	private long[] timeExecution = new long[151];
+	private int timerDivisor = 1;
 
 	public ArrayList<DigitalObject> run(String dataset, IFeatureManager fm, ArrayList<DigitalObject> inputList, int idTopic, String topicName) {
 	//public ArrayList<ArrayList<DigitalObject>> run(String dataset, IFeatureManager fm, ArrayList<DigitalObject> inputList, int idTopic, String topicName) {
@@ -77,7 +78,11 @@ public class KMeans implements IDiversify {
 
 
 
-
+	public long getTimeExecution(int k){
+		long time = this.timeExecution[k];
+		System.out.println("....time execution(ms) for k="+k+": "+time);
+		return time;
+	}
 	public ArrayList<ArrayList<DigitalObject>> run2(String dataset, IFeatureManager fm, ArrayList<DigitalObject> inputList, int idTopic, String topicName) {
 		this.fm = FeatureManager.getInstance(idTopic);
 
@@ -87,6 +92,15 @@ public class KMeans implements IDiversify {
 
 		try {
 			configFile.load(new FileInputStream("resources/kmeans.properties"));
+			//this.NUM_CLUSTERS = Integer.parseInt(configFile.getProperty("NUM_CLUSTERS"));  //esta linha estava fixando o número de clusters
+			this.CENTROIDS_INITIALIZER = Integer.parseInt(configFile.getProperty("CENTROIDS_INITIALIZER"));
+			this.CENTROIDS_UPDATE_METHOD = Integer.parseInt(configFile.getProperty("CENTROIDS_UPDATE_METHOD"));
+			this.MAX_ITERATIONS = Integer.parseInt(configFile.getProperty("MAX_ITERATIONS"));
+			this.inputList = new ArrayList<DigitalObject>(inputList);
+			this.originalList = new ArrayList<DigitalObject>(inputList);
+			this.totNumIterations = 0;
+			configFile.load(new FileInputStream("resources/runnerConfigFile.properties"));
+			this.timerDivisor = Integer.parseInt(configFile.getProperty("TIMER_DIVISOR"));
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -94,14 +108,6 @@ public class KMeans implements IDiversify {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		//this.NUM_CLUSTERS = Integer.parseInt(configFile.getProperty("NUM_CLUSTERS"));  //esta linha estava fixando o número de clusters
-		this.CENTROIDS_INITIALIZER = Integer.parseInt(configFile.getProperty("CENTROIDS_INITIALIZER"));
-		this.CENTROIDS_UPDATE_METHOD = Integer.parseInt(configFile.getProperty("CENTROIDS_UPDATE_METHOD"));
-		this.MAX_ITERATIONS = Integer.parseInt(configFile.getProperty("MAX_ITERATIONS"));
-		this.inputList = new ArrayList<DigitalObject>(inputList);
-		this.originalList = new ArrayList<DigitalObject>(inputList);
-		this.totNumIterations = 0;
 
 		ArrayList<ArrayList<DigitalObject>> clusters = selectInitialMedoids();
 		clusters = runClustering(clusters);
@@ -184,6 +190,7 @@ public class KMeans implements IDiversify {
 		}
 
 		inputList = (ArrayList<DigitalObject>) originalList.clone();
+		long startTime = System.nanoTime();
 		//For each image in the list, define its corresponding centroid
 		while (!inputList.isEmpty()) {
 
@@ -209,10 +216,11 @@ public class KMeans implements IDiversify {
 				clusters.get(imageClusterIndex).add(image);
 			}
 		}
-		
+
+		this.timeExecution[clusters.size()] = (System.nanoTime() - startTime)/timerDivisor;// pega o tempo para a execução de kMin a kMax para cada um dos tópicos individualmente (um tópico por vez)
+
 		//Updating Centroids
 		switch (this.CENTROIDS_UPDATE_METHOD) {
-		
 		case 1:
 			IAtualizeCentroids atualizeNN = new AverageClusterConectivity();
 			clusters = atualizeNN.updateCentroids(clusters, this.fm);

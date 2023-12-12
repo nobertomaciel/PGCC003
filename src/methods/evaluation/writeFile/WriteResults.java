@@ -1,5 +1,4 @@
 package methods.evaluation.writeFile;
-import exec.RunnerClusterAgglomerative;
 import methods.evaluationControl.EvaluationResult;
 
 import java.io.*;
@@ -35,8 +34,8 @@ public enum WriteResults {
             for(int j = kMin; j <= kMax; j++){
 //            for(int j = truncateSize; j >= kMin; j--){ //this line was used when TRUNCATE value was different of NUM_CLUSTERS
                     bw.write(j+",");
-//                    bw2.write(j+",");
-//                    bw3.write(j+",");
+                    bw2.write(j+",");
+                    bw3.write(j+",");
             }
 
             bw.write("bestK,");
@@ -74,18 +73,18 @@ public enum WriteResults {
                         bw.write(values.get(j)+",");
                     }
 
-//                    if(j >= values.size()){
-////                    if(j < arrListSize){
-//                         mediaMovelValues = mediaMovelArr.get(j);
-//                         angularCoefficientValues = angularCoefficientArr.get(j);
-//                         jFinal = j;
-//                    }
-//                    else{
-//                        mediaMovelValues = mediaMovelArr.get(jFinal);
-//                        angularCoefficientValues = angularCoefficientArr.get(jFinal);
-//                    }
-//                    bw2.write(mediaMovelValues+",");
-//                    bw3.write(angularCoefficientValues+",");
+                    if(j >= values.size()){
+//                    if(j < arrListSize){
+                         mediaMovelValues = mediaMovelArr.get(j);
+                         angularCoefficientValues = angularCoefficientArr.get(j);
+                         jFinal = j;
+                    }
+                    else{
+                        mediaMovelValues = mediaMovelArr.get(jFinal);
+                        angularCoefficientValues = angularCoefficientArr.get(jFinal);
+                    }
+                    bw2.write(mediaMovelValues+",");
+                    bw3.write(angularCoefficientValues+",");
                 }
 
                 int newBestK = (truncateSize-arrListSize)+bestK[methodEvaluationCurrent];
@@ -95,8 +94,8 @@ public enum WriteResults {
                 }
 
                 bw.write(newBestK+",");
-//                bw2.write(newBestK+",");
-//                bw3.write(newBestK+",");
+                bw2.write(newBestK+",");
+                bw3.write(newBestK+",");
 
 //                if(newBestK > 99){
 //                    System.out.println("Best K outlier: "+newBestK);
@@ -105,22 +104,22 @@ public enum WriteResults {
 //                    System.out.println("Best K OK: "+newBestK);
 //                }
 
-                //bw.write(bestK[methodEvaluationCurrent]+",");
-                //bw2.write(bestK[methodEvaluationCurrent]+",");
-                //bw3.write(bestK[methodEvaluationCurrent]+",");
+//                bw.write(bestK[methodEvaluationCurrent]+",");
+//                bw2.write(bestK[methodEvaluationCurrent]+",");
+//                bw3.write(bestK[methodEvaluationCurrent]+",");
 
                 bw.write(time.get(methodEvaluationCurrent).toString());
-//                bw2.write(time.get(methodEvaluationCurrent).toString());
-//                bw3.write(time.get(methodEvaluationCurrent).toString());
+                bw2.write(time.get(methodEvaluationCurrent).toString());
+                bw3.write(time.get(methodEvaluationCurrent).toString());
 
                 bw.newLine();
-//                bw2.newLine();
-//                bw3.newLine();
+                bw2.newLine();
+                bw3.newLine();
             }
 
             bw.close();
-//            bw2.close();
-//            bw3.close();
+            bw2.close();
+            bw3.close();
 
         } catch (IOException ex) {
             ex.printStackTrace();

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
-import exec.RunnerClusterAgglomerative;
 import interfaces.IFeatureManager;
 import jmetal.util.JMException;
 import jmetal.util.wrapper.XReal;

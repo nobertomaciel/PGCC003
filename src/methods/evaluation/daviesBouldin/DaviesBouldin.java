@@ -2,15 +2,12 @@ package methods.evaluation.daviesBouldin;
 
 import config.FeatureManager;
 import curveAnalysisMethods.curveAnalysisMethods;
-import exec.RunnerClusterAgglomerative;
 import interfaces.IEvaluator;
 import object.DigitalObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.NavigableMap;
 import java.util.TreeMap;
-import java.util.Collections;
 
 public enum DaviesBouldin implements IEvaluator {
     INSTANCE;
