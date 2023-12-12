@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.io.*;
+import java.util.Map.Entry;
 
 public class curveAnalysisMethods {
     int curveAnaysisMethod;
@@ -36,6 +37,30 @@ public class curveAnalysisMethods {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private int getDefaultBestK(NavigableMap<Integer, Double> mapAuxiliar, int type){
+        double kValue = 0;
+        int bK = 0;
+        for(Entry<Integer, Double> entry: mapAuxiliar.entrySet()) {
+            if(kValue == 0) {
+                kValue = entry.getValue();
+            }
+            // pelo mínimo
+            if(type == 1) {
+                if(entry.getValue() <= kValue) {
+                    kValue = entry.getValue();
+                    bK = entry.getKey();
+                }
+            }
+            else{
+                if(entry.getValue() >= kValue) {
+                    kValue = entry.getValue();
+                    bK = entry.getKey();
+                }
+            }
+        }
+        return bK;
     }
 
     //public int run(NavigableMap<Integer,Double> mapAuxiliar, int iMethod){
@@ -254,8 +279,16 @@ public class curveAnalysisMethods {
                 for(Double key: valuesIndex.keySet()){
                     mapAuxiliar.put(valuesIndex.get(key), key);
                 }
-                // implementar aqui o returnArr no lugar de return valuesIndex.get(valuesIndex.lastKey());
-                //return valuesIndex.get(valuesIndex.lastKey());
+                // aqui, pegar o valor máximo de mapAuxiliar conforme o método de validação e retornar
+                if(iMethod==2 || iMethod==3){
+                    int type = 2;
+                    k = getDefaultBestK(mapAuxiliar, type);
+                }
+                else{
+                    int type = 1;
+                    k = getDefaultBestK(mapAuxiliar, type);
+                }
+                angularCoefficientArr.put(i, 0.0);
             }
             c += 1;
         }
