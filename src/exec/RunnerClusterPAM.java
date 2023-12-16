@@ -6,7 +6,7 @@ import interfaces.IDiversify;
 import interfaces.IEvaluator;
 import interfaces.IFeatureManager;
 //import methods.agglomerative.AgglomerativeClustering;
-import methods.kmeans.KMeans;
+import methods.kmedoids.KMedoids;
 import methods.evaluation.daviesBouldin.DaviesBouldin;
 import methods.evaluation.dtrs.Dtrs;
 import methods.evaluation.dunnIndex.DunnIndex;
@@ -163,7 +163,7 @@ public class RunnerClusterPAM {
             this.runListTrucating = Boolean.parseBoolean(configFile.getProperty("RUN_LIST_TRUNCATING"));
             this.trucate_size = Integer.parseInt(configFile.getProperty("TRUNCATE_SIZE"));
 
-            //dataConfigFile.load(new FileInputStream("resources/kmeans.properties"));
+            //dataConfigFile.load(new FileInputStream("resources/kmedoids.properties"));
             dataConfigFile.load(new FileInputStream("resources/agglomerative.properties"));
 
             //this.kMax = Integer.parseInt(dataConfigFile.getProperty("NUM_CLUSTERS"));
@@ -307,7 +307,7 @@ public class RunnerClusterPAM {
 
         //System.out.println(">>> Formas para obter o tempo de execução do esquema............................:");
         //System.out.println(".... a) Pegar o tempo até a execução de cada cluster encontrado no algoritmo");
-        methodName = ((KMeans) method).getClass().toString().split("\\.")[2];
+        methodName = ((KMedoids) method).getClass().toString().split("\\.")[2];
         System.out.println("....Algorithm: "+methodName);
 
         //if(methodName == "KMEans") kMin=kMax;
@@ -320,10 +320,10 @@ public class RunnerClusterPAM {
         for (int k = kMin; k <= kMax; k++) {
             System.out.println(">>> Clustering start! .................................");
             System.out.println("....k = "+k);
-            ((KMeans) method).setNUM_CLUSTERS(k);
-            cluster = ((KMeans) method).run2(this.dataset, fm, inputList, topicId, topicName);
+            ((KMedoids) method).setNUM_CLUSTERS(k);
+            cluster = ((KMedoids) method).run2(this.dataset, fm, inputList, topicId, topicName);
 //            executionTime[k] = 10000; //((KMeans) method).getTimeExecution(k);
-            executionTime[k] = ((KMeans) method).getTimeExecution(k);
+            executionTime[k] = ((KMedoids) method).getTimeExecution(k);
             clusterAuxiliar.add(cluster);
             auxiliarError(cluster);
         }
@@ -361,7 +361,7 @@ public class RunnerClusterPAM {
         for (int i = firstMethodEvaluation; i <= lastMethodEvaluation; i++) {
 
             System.out.println(">>> Running agglomerative for bestk...: "+bestk[i]);
-            ((KMeans)method).setNUM_CLUSTERS(bestk[i]);
+            ((KMedoids)method).setNUM_CLUSTERS(bestk[i]);
             String evaluationName = methodEvaluation.get(i).getClass().getSimpleName();
 
             bestkExecutionTime.put(i,executionTime[bestk[i]]);
@@ -408,7 +408,7 @@ public class RunnerClusterPAM {
                 for (int i = 0; i < outputList.size() && i < this.outputListSize; i++)
                     selection.add(outputList.get(i));
 
-                KMeans pam = new KMeans();
+                KMedoids pam = new KMedoids();
                 selection = pam.run(this.dataset, fm, selection, idTopic, topicName);
                 break;
             default:

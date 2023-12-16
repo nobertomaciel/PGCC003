@@ -110,7 +110,7 @@ public class DiversifyPloblem extends Problem {
 			}*/
 		}else if(linkageCriterion == 7){
 			clusters = new ArrayList<ArrayList<DigitalObject>>();
-			KMeansMethod km = new KMeansMethod();
+			KMedoidsMethod km = new KMedoidsMethod();
 			clusters =  km.run(fm, inputList, idLocal, locName, chromosome);
 		}else if(linkageCriterion == 8){
 			clusters = readCluster(locName);

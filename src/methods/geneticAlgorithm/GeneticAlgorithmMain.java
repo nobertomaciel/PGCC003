@@ -287,7 +287,7 @@ public class GeneticAlgorithmMain implements IDiversify{
 			}*/
 		}else{
 			clusters = new ArrayList<ArrayList<DigitalObject>>();
-			KMeansMethod km = new KMeansMethod();
+			KMedoidsMethod km = new KMedoidsMethod();
 			clusters =  km.run(fm, inputList, idLocal, locName, chromosome);
 
 

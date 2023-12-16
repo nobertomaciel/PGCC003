@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Properties;
 
-import methods.kmeans.outputGenerator.PositionMeasurer;
-import methods.kmeans.outputGenerator.RoundRobinSelector;
+import methods.kmedoids.outputGenerator.PositionMeasurer;
+import methods.kmedoids.outputGenerator.RoundRobinSelector;
 import object.DigitalObject;
 import clusterEff.ClusteringEvaluation;
 import config.FeatureManager;
