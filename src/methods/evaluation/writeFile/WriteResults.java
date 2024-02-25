@@ -66,22 +66,20 @@ public enum WriteResults {
                 for(int j = 0; j < values.size(); j++){
                 //for(int j = 0; j < arrListSize; j++){
 //                for(int j = 0; j < truncateSize; j++){
-//                    if(j >= values.size()){
-//                        bw.write(values.get(j-1)+",");
-//                    }
-//                    else{
-//                        bw.write(values.get(j)+",");
-//                    }
-
-//                    if(j < arrListSize){
                     if(j >= values.size()){
-                         bw.write(values.get(j-1)+",");
+                        bw.write(values.get(j-1)+",");
+                    }
+                    else{
+                        bw.write(values.get(j)+",");
+                    }
+
+                    if(j >= values.size()){
+//                    if(j < arrListSize){
                          mediaMovelValues = mediaMovelArr.get(j);
                          angularCoefficientValues = angularCoefficientArr.get(j);
                          jFinal = j;
                     }
                     else{
-                        bw.write(values.get(j)+",");
                         mediaMovelValues = mediaMovelArr.get(jFinal);
                         angularCoefficientValues = angularCoefficientArr.get(jFinal);
                     }

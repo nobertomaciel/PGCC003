@@ -161,7 +161,7 @@ public class curveAnalysisMethods {
                 }
                 else{
                     v[0] = ya;
-                    k = ka - 1;
+                    k = ka-1;
                 }
             }
             // ----------------------------------------------------------------------------------
@@ -178,8 +178,8 @@ public class curveAnalysisMethods {
                     if (test) {
                         break;
                     } else {
-                        k = ka - 1;
-//                        k = ka;
+//                        k = ka + 1;
+                        k = ka;
                     }
                 }
                 else if(this.curveAnaysisMethod == 5){
@@ -253,8 +253,7 @@ public class curveAnalysisMethods {
 
                         // não é necessário break, pois, é necessário que todo o processo seja executado para preencher os arrays de relatório
                         if(test && !pass){
-                            k = ka - 1;
-//                            k = ka;
+                            k = ka;
                             pass = true;
                             //System.out.println("........................................................................");
                             //System.out.println("                              BREAKED");
